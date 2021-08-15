@@ -1,6 +1,6 @@
 const express = require('express')
 
-module.exports = (service) => {
+module.exports = (authService, amqpService) => {
   const router = express.Router()
 
   /**
@@ -39,9 +39,10 @@ module.exports = (service) => {
    *        description: Username already exists
    */
   router.post('/register', async (req, res, next) => {
-    const { username, password } = req.body
-    const token = await service.registerUser(username, password)
+    const { username, email, password } = req.body
+    const token = await authService.registerUser(username, password)
     if (token) {
+      await amqpService.publishRegistration({ email, username })
       res.send({ token: token })
     } else {
       res.status(400).send(`Username ${username} already exists`)
@@ -69,7 +70,7 @@ module.exports = (service) => {
    */
   router.post('/login', async (req, res, next) => {
     const { username, password } = req.body
-    const token = await service.loginUser(username, password)
+    const token = await authService.loginUser(username, password)
     if (token) {
       res.send({ token: token })
     } else {

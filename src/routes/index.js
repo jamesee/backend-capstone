@@ -2,7 +2,7 @@ const express = require('express')
 const swaggerUi = require('swagger-ui-express')
 const swaggerJsdoc = require('swagger-jsdoc')
 
-module.exports = (authMiddleware, authService, db) => {
+module.exports = (authMiddleware, authService, amqpService, db) => {
   const router = express.Router()
 
   /**
@@ -19,7 +19,7 @@ module.exports = (authMiddleware, authService, db) => {
   })
 
   // Auth
-  router.use('/', require('./auth')(authService))
+  router.use('/', require('./auth')(authService, amqpService))
 
   // Swagger Docs
   const options = {

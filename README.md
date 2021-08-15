@@ -33,8 +33,9 @@ $ heroku login
 
 $ heroku create <app-name>
 
-# Add Postgres add-on to app
+# Add Postgres and CloudAMQP add-ons to app
 $ heroku addons:create heroku-postgresql:hobby-dev
+$ heroku addons:create cloudamqp:lemur
 
 # Set config var to access Postgres without SSL
 $ heroku config:set PGSSLMODE=no-verify
