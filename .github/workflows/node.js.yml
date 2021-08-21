@@ -29,6 +29,18 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      rabbitmq:
+        image: rabbitmq:3.8
+        env:
+          RABBITMQ_DEFAULT_USER: test_user
+          RABBITMQ_DEFAULT_PASS: test_password
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmqctl node_health_check"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v2
@@ -36,6 +48,7 @@ jobs:
       - run: npm test
         env:
           DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/postgres'
+          CLOUDAMQP_URL: 'amqp://test_user:test_password@rabbitmq:5672'
           JWT_SECRET: 'test_secret'
           JWT_EXPIRY: 900
           SALT_ROUNDS: 10

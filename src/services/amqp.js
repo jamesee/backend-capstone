@@ -14,6 +14,8 @@ module.exports = () => {
     channel.sendToQueue(QUEUE, Buffer.from(JSON.stringify(message)), {
       contentType: 'application/json',
     })
+    await channel.close()
+    await client.close()
   }
   
   return service
