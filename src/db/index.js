@@ -1,8 +1,15 @@
 const { Pool } = require('pg')
+const fs = require('fs')
 
 let pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    require: true,
+    rejectUnauthorized: false,
+    ca: fs.readFileSync(`${__dirname}/global-bundle.pem`)
+  }
 })
+
 
 const db = {
   ...require('./items')(pool),
