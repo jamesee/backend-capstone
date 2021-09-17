@@ -40,12 +40,12 @@ module.exports = (authService, amqpService) => {
    */
   router.post('/register', async (req, res, next) => {
     const { username, email, password } = req.body
-    const token = await authService.registerUser(username, email, password)
+    const token = await authService.registerUser(username, password)
     if (token) {
       await amqpService.publishRegistration({ email, username })
       res.send({ token: token })
     } else {
-      res.status(400).send(`Email ${email} already exists`)
+      res.status(400).send(`Username ${username} already exists`)
     }
   })
 
@@ -69,8 +69,8 @@ module.exports = (authService, amqpService) => {
    *        description: Invalid login credentials
    */
   router.post('/login', async (req, res, next) => {
-    const { email, password } = req.body
-    const token = await authService.loginUser(email, password)
+    const { username, password } = req.body
+    const token = await authService.loginUser(username, password)
     if (token) {
       res.send({ token: token })
     } else {

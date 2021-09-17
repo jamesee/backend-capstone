@@ -10,7 +10,7 @@ module.exports = () => {
   service.publishRegistration = async (message) => {
     const client = await amqplib.connect(URL)
     const channel = await client.createChannel()
-    await channel.assertQueue(QUEUE)
+    await channel.assertQueue(QUEUE);
     channel.sendToQueue(QUEUE, Buffer.from(JSON.stringify(message)), {
       contentType: 'application/json',
     })
