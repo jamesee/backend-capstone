@@ -13,6 +13,7 @@ const router = Router(authMiddleware, authService, amqpService, db)
 const app = App(router)
 
 const PORT = process.env.PORT || 3000
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`)
 })
