@@ -8,7 +8,7 @@
     "start": "node src/server.js",
     "db:migrate": "node scripts/migrate.js",
     "dev:worker": "nodemon src/worker.js",
-    "worker": "node src/myworker.js",
+    "worker": "node src/worker.js",
     "test": "jest --runInBand --coverage"
   },
   "keywords": [],
