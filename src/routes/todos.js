@@ -1,8 +1,9 @@
 const express = require('express')
 const Todo = require('../models/todo')
 const AccessControl = require('../models/access-control')
+// const email = require('../services/email')
 
-module.exports = (db) => {
+module.exports = (db, amqpService) => {
   const router = express.Router()
   
   /**
@@ -51,7 +52,7 @@ module.exports = (db) => {
     // console.log(todo)
     // console.log(newAccessControl)
     await db.insertAccessControl(newAccessControl)
-    res.status(201).send(todo)
+    res.status(201).json(todo)
   })
 
   /**
@@ -74,7 +75,7 @@ module.exports = (db) => {
   router.get('/', async (req, res, next) => {
     const {uid } = req
     const todos = await db.findAllTodosByUid(uid)
-    res.send(todos)
+    res.status(200).json(todos)
   })
 
   /**
@@ -100,16 +101,16 @@ module.exports = (db) => {
    */
   router.get('/:id', async (req, res, next) => {
     const { uid } = req
-    const todo_id = req.params.id
+    const todo_id = Number(req.params.id)
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
     if (authorised === null || authorised.role === 'read-only') {
-      res.status(403).send(`User not authorised to access todo_id ${todo_id}`)
+      res.status(403).json({error: `User not authorised to access todo_id ${todo_id}`})
     } else {
       const todo = await db.findTodoByTodoidUid(todo_id, uid);
       if (todo) {
-        res.send(todo)
+        res.json(todo)
       } else {
-        res.status(400).send(`Todo_id ${todo_id} not found`)
+        res.status(400).json({error: `Todo_id ${todo_id} not found`})
       }
     }
   })
@@ -154,17 +155,15 @@ module.exports = (db) => {
 
   router.put('/:id', async (req, res, next) => {
     const { uid, username } = req
-    const todo_id = req.params.id
+    const todo_id = Number(req.params.id)
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
     if (authorised === null || authorised.role === 'read-only') {
-      res.status(403).send(`User not authorised to update todo_id ${todo_id}`)
+      res.status(403).json({error:`User not authorised to update todo_id ${todo_id}`})
     } else {
       const { title, due_date, is_completed, is_deleted} = req.body
       const updatedTodo = new Todo({ todo_id, title, updated_by: username, due_date, is_completed, is_deleted })
-      // console.log(todo_id)
-      // console.log(updatedTodo)
       const todo = await db.updateTodo(todo_id, updatedTodo)
-      res.status(200).send(todo)
+      res.status(200).json(todo)
     }
   })
 
@@ -207,15 +206,32 @@ module.exports = (db) => {
   //   }
   // })
   const { uid } = req
-  const todo_id = req.params.id
+  const todo_id = Number(req.params.id)
   const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
   if (authorised === null || authorised.role === 'read-only') {
-    res.status(401).send(`User not authorised to update todo_id ${todo_id}`)
+    res.status(403).json({error: `User not authorised to update todo_id ${todo_id}`})
   } else {
     const todo = await db.deleteTodo(todo_id)
-    todo ? res.status(200).send(todo): res.status(400).send(`Item id ${todo_id} not found`);
+    todo ? res.status(200).json(todo): res.status(404).json({error: `Item id ${todo_id} not found`});
   }
 })
+
+
+
+router.post('/:id/emails', async (req, res, next) => {
+  const {uid, username } = req
+  const todo_id = Number(req.params.id)
+  const { emails } = req.body
+
+  emails.forEach(async (email) => {
+    console.log(email)
+    await amqpService.publishEmail(email, todo_id)
+  })
+
+  // console.log(`todo_id: ${todo_id}, email : ${emails}`)
+  res.status(201).json({todo_id, emails})
+})
+
 
   return router
 }

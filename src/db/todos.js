@@ -11,6 +11,14 @@ module.exports = (pool) => {
     return new Todo(res.rows[0])
   }
   
+  db.findTodoById = async (todo_id) => {
+    const res = await pool.query(
+      'SELECT * FROM Todos where todo_id=$1',
+      [todo_id]
+    )
+    return res.rowCount ? new Todo(res.rows[0]) : null
+  }
+
   db.findAllTodosByUid = async (uid) => {
     const res = await pool.query(
       'SELECT * FROM Todos td INNER JOIN Access_controls ac ON td.todo_id = ac.todo_id where ac.user_id=$1',

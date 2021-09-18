@@ -1,6 +1,5 @@
 const express = require('express')
 const Task = require('../models/task')
-const AccessControl = require('../models/access-control')
 
 module.exports = (db) => {
   const router = express.Router()
@@ -49,11 +48,11 @@ module.exports = (db) => {
     //check whether uid has access to todo_id to create task
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
     if (authorised === null || authorised.role === 'read-only') {
-        res.status(401).send(`User not authorised to create task in todo_id ${todo_id}`)
+        res.status(403).json({error: `User not authorised to create task in todo_id ${todo_id}`})
     } else {
         const newTask = new Task({ todo_id, title, description, updated_by: username,  due_date, is_completed, is_deleted })
         const task = await db.insertTask(newTask)
-        res.status(201).send(task)
+        res.status(201).json(task)
     }
   })
 
@@ -77,7 +76,7 @@ module.exports = (db) => {
   router.get('/', async (req, res, next) => {
     const { uid } = req
     const tasks = await db.findTasksByUid(uid)
-    res.send(tasks)
+    res.status(200).json(tasks)
   })
 
   /**
@@ -103,12 +102,12 @@ module.exports = (db) => {
    */
   router.get('/:id', async (req, res, next) => {
     const {uid} = req
-    const task_id = req.params.id
+    const task_id = Number(req.params.id)
     const task = await db.findTaskByTaskidUid(task_id, uid);
     if (task) {
-      res.send(task)
+      res.status(200).json(task)
     } else {
-      res.status(400).send(`Todo id ${task_id} not found`)
+      res.status(403).json({error: `Task_id ${task_id} not found`})
     }
   })
 
@@ -142,19 +141,16 @@ module.exports = (db) => {
 
   router.put('/:id', async (req, res, next) => {
     const { uid, username } = req
-    const task_id = req.params.id
+    const task_id = Number(req.params.id)
     const { todo_id, title, description, due_date, is_completed, is_deleted} = req.body
 
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
-    console.log(authorised)
     if (authorised === null || authorised.role === 'read-only') {
-      res.status(401).send(`User not authorised to update task_id ${task_id}`)
+      res.status(403).json({error:`User not authorised to update task_id ${task_id}`})
     } else {
       const updatedTask = new Task({ todo_id, title,description, updated_by: username, due_date, is_completed, is_deleted })
-      // console.log(todo_id)
-      // console.log(updatedTodo)
       const task = await db.updateTask(task_id, updatedTask)
-      res.status(200).send(task)
+      res.status(200).json(task)
     }
   })
 
@@ -178,17 +174,17 @@ module.exports = (db) => {
 
   router.delete('/:id', async (req, res, next) => {
   const { uid } = req
-  const task_id = req.params.id
+  const task_id = Number(req.params.id)
   const task = await db.findTaskById(task_id)
   if (task == null){
-    res.status(401).send(`Task_id ${todo_id} not found`)
+    res.status(404).json({error: `Task_id ${task_id} not found`})
   } else {
     const authorised = await db.findAccessControlByTodoidUid(task.todo_id, uid)
     if (authorised === null || authorised.role === 'read-only') {
-      res.status(401).send(`User not authorised to delete task_id ${task_id}`)
+      res.status(403).json({error: `User not authorised to delete task_id ${task_id}`})
     } else {
       const todo = await db.deleteTask(task_id)
-      res.status(200).send(todo)
+      res.status(200).json(todo)
     }
   }
 })

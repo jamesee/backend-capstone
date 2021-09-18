@@ -39,7 +39,7 @@ module.exports = (authMiddleware, authService, amqpService, db) => {
   router.use(authMiddleware)
 
   // router.use('/items', require('./items')(db))
-  router.use('/todos', require('./todos')(db))
+  router.use('/todos', require('./todos')(db, amqpService))
   router.use('/tasks', require('./tasks')(db))
 
   return router
