@@ -38,7 +38,9 @@ module.exports = (authMiddleware, authService, amqpService, db) => {
   // All routes from this point will use the auth middleware
   router.use(authMiddleware)
 
-  router.use('/items', require('./items')(db))
+  // router.use('/items', require('./items')(db))
+  router.use('/todos', require('./todos')(db))
+  router.use('/tasks', require('./tasks')(db))
 
   return router
 }

@@ -1,4 +1,4 @@
-const User = require('../models/user-bak')
+const User = require('../models/user')
 
 module.exports = (pool) => {
   const db = {}
@@ -9,6 +9,14 @@ module.exports = (pool) => {
       [user.username, user.email, user.password_hash]
     )
     return new User(res.rows[0])
+  }
+  
+  db.findUserById = async (id) => {
+    const res = await pool.query(
+      'SELECT * FROM Users WHERE id = $1',
+      [id]
+    )
+    return res.rowCount ? new User(res.rows[0]) : null
   }
 
   db.findUserByUsername = async (username) => {

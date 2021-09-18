@@ -1,11 +1,11 @@
 class Todo {
-    constructor({ id, task_name, description, complete, due_date, updated_by }) {
-      this.id = id
-      this.task_name = task_name
-      this.description = description
-      this.complete = complete
-      this.due_date = due_date
+    constructor({ todo_id, title, updated_by, due_date, is_completed, is_deleted}) {
+      this.todo_id = todo_id
+      this.title = title
       this.updated_by = updated_by
+      this.due_date = due_date
+      this.is_completed = is_completed
+      this.is_deleted = is_deleted
     }
   }
   
