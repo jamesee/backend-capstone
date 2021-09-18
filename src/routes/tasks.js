@@ -142,17 +142,19 @@ module.exports = (db) => {
 
   router.put('/:id', async (req, res, next) => {
     const { uid, username } = req
-    const todo_id = req.params.id
+    const task_id = req.params.id
+    const { todo_id, title, description, due_date, is_completed, is_deleted} = req.body
+
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
+    console.log(authorised)
     if (authorised === null || authorised.role === 'read-only') {
-      res.status(401).send(`User not authorised to update todo_id ${todo_id}`)
+      res.status(401).send(`User not authorised to update task_id ${task_id}`)
     } else {
-      const { title, due_date, is_completed, is_deleted} = req.body
-      const updatedTodo = new Todo({ todo_id, title, updated_by: username, due_date, is_completed, is_deleted })
+      const updatedTask = new Task({ todo_id, title,description, updated_by: username, due_date, is_completed, is_deleted })
       // console.log(todo_id)
       // console.log(updatedTodo)
-      const todo = await db.updateTodo(todo_id, updatedTodo)
-      res.status(200).send(todo)
+      const task = await db.updateTask(task_id, updatedTask)
+      res.status(200).send(task)
     }
   })
 
@@ -175,22 +177,19 @@ module.exports = (db) => {
    */
 
   router.delete('/:id', async (req, res, next) => {
-    // const todo_id = req.params.id
-  //   const success = await db.deleteTodo(todo_id)
-  //   if (success) {
-  //     res.send(`Deleted item ${todo_id} successfully`)
-  //   } else {
-  //     res.status(400).send(`Item id ${todo_id} not found`)
-  //   }
-  // })
   const { uid } = req
-  const todo_id = req.params.id
-  const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
-  if (authorised === null || authorised.role === 'read-only') {
-    res.status(401).send(`User not authorised to update todo_id ${todo_id}`)
+  const task_id = req.params.id
+  const task = await db.findTaskById(task_id)
+  if (task == null){
+    res.status(401).send(`Task_id ${todo_id} not found`)
   } else {
-    const todo = await db.deleteTodo(todo_id)
-    todo ? res.status(200).send(todo): res.status(400).send(`Item id ${todo_id} not found`);
+    const authorised = await db.findAccessControlByTodoidUid(task.todo_id, uid)
+    if (authorised === null || authorised.role === 'read-only') {
+      res.status(401).send(`User not authorised to delete task_id ${task_id}`)
+    } else {
+      const todo = await db.deleteTask(task_id)
+      res.status(200).send(todo)
+    }
   }
 })
 

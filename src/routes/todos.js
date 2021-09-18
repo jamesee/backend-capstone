@@ -101,13 +101,28 @@ module.exports = (db) => {
   router.get('/:id', async (req, res, next) => {
     const { uid } = req
     const todo_id = req.params.id
-    const todo = await db.findTodoByTodoidUid(todo_id, uid);
-    if (todo) {
-      res.send(todo)
+    const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
+    if (authorised === null || authorised.role === 'read-only') {
+      res.status(403).send(`User not authorised to access todo_id ${todo_id}`)
     } else {
-      res.status(400).send(`Todo id ${todo_id} not found`)
+      const todo = await db.findTodoByTodoidUid(todo_id, uid);
+      if (todo) {
+        res.send(todo)
+      } else {
+        res.status(400).send(`Todo_id ${todo_id} not found`)
+      }
     }
   })
+  // router.get('/:id', async (req, res, next) => {
+  //   const { uid } = req
+  //   const todo_id = req.params.id
+  //   const todo = await db.findTodoByTodoidUid(todo_id, uid);
+  //   if (todo) {
+  //     res.send(todo)
+  //   } else {
+  //     res.status(400).send(`Todo id ${todo_id} not found`)
+  //   }
+  // })
 
   /**
    * @openapi
@@ -142,7 +157,7 @@ module.exports = (db) => {
     const todo_id = req.params.id
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
     if (authorised === null || authorised.role === 'read-only') {
-      res.status(401).send(`User not authorised to update todo_id ${todo_id}`)
+      res.status(403).send(`User not authorised to update todo_id ${todo_id}`)
     } else {
       const { title, due_date, is_completed, is_deleted} = req.body
       const updatedTodo = new Todo({ todo_id, title, updated_by: username, due_date, is_completed, is_deleted })

@@ -52,12 +52,20 @@ module.exports = (pool) => {
     return new Task(res.rows[0])
   }
 
+  // db.deleteTask = async (task_id) => {
+  //   const res = await pool.query(
+  //     'DELETE FROM Tasks WHERE task_id=$1',
+  //     [task_id]
+  //   )
+  //   return res.rowCount > 0
+  // }
+
   db.deleteTask = async (task_id) => {
     const res = await pool.query(
-      'DELETE FROM Tasks WHERE task_id=$1',
-      [task_id]
+      'UPDATE Tasks SET is_deleted=$2 WHERE task_id=$1 RETURNING *',
+      [task_id, true]
     )
-    return res.rowCount > 0
+    return new Task(res.rows[0])
   }
 
   return db
