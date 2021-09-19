@@ -28,13 +28,13 @@ db.initialise = async () => {
 
     // delete all tables
     // for development purpose
-    // await pool.query(`
-    //   DROP TABLE IF EXISTS items;
-    //   DROP TABLE IF EXISTS access_controls;
-    //   DROP TABLE IF EXISTS tasks;
-    //   DROP TABLE IF EXISTS todos;
-    //   DROP TABLE IF EXISTS users;
-    // `)
+    await pool.query(`
+      DROP TABLE IF EXISTS items;
+      DROP TABLE IF EXISTS access_controls;
+      DROP TABLE IF EXISTS tasks;
+      DROP TABLE IF EXISTS todos;
+      DROP TABLE IF EXISTS users;
+    `)
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS Users (
