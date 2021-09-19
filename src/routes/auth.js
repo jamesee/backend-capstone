@@ -7,14 +7,35 @@ module.exports = (authService, amqpService) => {
    * @openapi
    * components:
    *  schemas:
-   *    User:
+   *    RegistrationUser:
    *      type: object
    *      required:
    *        - username
+   *        - email
    *        - password
    *      properties:
    *        username:
    *          type: string
+   *        email:
+   *          type: string
+   *          format: email
+   *        password:
+   *          type: string
+   */
+
+  /**
+   * @openapi
+   * components:
+   *  schemas:
+   *    LoginUser:
+   *      type: object
+   *      required:
+   *        - email
+   *        - password
+   *      properties:
+   *        email:
+   *          type: string
+   *          format: email
    *        password:
    *          type: string
    */
@@ -31,7 +52,7 @@ module.exports = (authService, amqpService) => {
    *      content:
    *        application/json:
    *          schema:
-   *            $ref: '#/components/schemas/User'
+   *            $ref: '#/components/schemas/RegistrationUser'
    *    responses:
    *      200:
    *        description: OK
@@ -61,7 +82,7 @@ module.exports = (authService, amqpService) => {
    *      content:
    *        application/json:
    *          schema:
-   *            $ref: '#/components/schemas/User'
+   *            $ref: '#/components/schemas/LoginUser'
    *    responses:
    *      200:
    *        description: OK

@@ -3,43 +3,59 @@ const Task = require('../models/task')
 
 module.exports = (db) => {
   const router = express.Router()
-  
+
   /**
    * @openapi
    * components:
    *  schemas:
-   *    Item:
+   *    Task:
    *      type: object
    *      required:
-   *        - name
-   *        - quantity
+   *        - todo_id
+   *        - title   
+   *        - description
+   *        - update_by
+   *        - due_date
+   *        - is_completed
+   *        - is_deleted
    *      properties:
-   *        name:
-   *          type: string
-   *        quantity:
+   *        todo_id:
    *          type: integer
+   *        title:
+   *          type: string 
+   *        description:
+   *          type: string   
+   *        updated_by:
+   *          type: string
+   *        due_date:
+   *          type: string
+   *          format: date
+   *        is_completed:
+   *          type: boolean  
+   *        is_deleted:
+   *          type: boolean
    */
 
   /**
    * @openapi
-   * /items:
+   * /tasks:
    *  post:
    *    tags:
-   *    - items
-   *    description: Create an item
+   *    - tasks
+   *    description: Create a Task
    *    requestBody:
    *      required: true
    *      content:
    *        application/json:
    *          schema:
-   *            $ref: '#/components/schemas/Item'
+   *            $ref: '#/components/schemas/Task'
    *    responses:
    *      201:
    *        description: Created
    *        content:
    *          application/json:
    *            schema:
-   *              $ref: '#/components/schemas/Item'
+   *              $ref: '#/components/schemas/Task'
    */
   router.post('/', async (req, res, next) => {
     const {uid, username } = req
@@ -58,11 +74,11 @@ module.exports = (db) => {
 
   /**
    * @openapi
-   * /items:
+   * /tasks:
    *  get:
    *    tags:
-   *    - items
-   *    description: Get all items
+   *    - tasks
+   *    description: Get all tasks by uid signed in JWT token
    *    responses:
    *      200:
    *        description: OK
@@ -71,7 +87,7 @@ module.exports = (db) => {
    *            schema:
    *              type: array
    *              items:
-   *                $ref: '#/components/schemas/Item'
+   *                $ref: '#/components/schemas/Task'
    */
   router.get('/', async (req, res, next) => {
     const { uid } = req
@@ -81,11 +97,11 @@ module.exports = (db) => {
 
   /**
    * @openapi
-   * /items/{id}:
+   * /tasks/{id}:
    *  get:
    *    tags:
-   *    - items
-   *    description: Get item
+   *    - tasks
+   *    description: Get task based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
    *        name: id
@@ -98,7 +114,7 @@ module.exports = (db) => {
    *        content:
    *          application/json:
    *            schema:
-   *              $ref: '#/components/schemas/Item'
+   *              $ref: '#/components/schemas/Task'
    */
   router.get('/:id', async (req, res, next) => {
     const {uid} = req
@@ -113,11 +129,11 @@ module.exports = (db) => {
 
   /**
    * @openapi
-   * /items/{id}:
+   * /tasks/{id}:
    *  put:
    *    tags:
-   *    - items
-   *    description: Update an item
+   *    - tasks
+   *    description: Update a task based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
    *        name: id
@@ -129,14 +145,14 @@ module.exports = (db) => {
    *      content:
    *        application/json:
    *          schema:
-   *            $ref: '#/components/schemas/Item'
+   *            $ref: '#/components/schemas/Task'
    *    responses:
    *      200:
    *        description: OK
    *        content:
    *          application/json:
    *            schema:
-   *              $ref: '#/components/schemas/Item'
+   *              $ref: '#/components/schemas/Task'
    */
 
   router.put('/:id', async (req, res, next) => {
@@ -156,11 +172,11 @@ module.exports = (db) => {
 
   /**
    * @openapi
-   * /items/{id}:
+   * /tasks/{id}:
    *  delete:
    *    tags:
-   *    - items
-   *    description: Delete an item
+   *    - tasks
+   *    description: Soft delete a task based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
    *        name: id
@@ -170,24 +186,27 @@ module.exports = (db) => {
    *    responses:
    *      200:
    *        description: OK
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Task'
    */
-
   router.delete('/:id', async (req, res, next) => {
-  const { uid } = req
-  const task_id = Number(req.params.id)
-  const task = await db.findTaskById(task_id)
-  if (task == null){
-    res.status(404).json({error: `Task_id ${task_id} not found`})
-  } else {
-    const authorised = await db.findAccessControlByTodoidUid(task.todo_id, uid)
-    if (authorised === null || authorised.role === 'read-only') {
-      res.status(403).json({error: `User not authorised to delete task_id ${task_id}`})
+    const { uid } = req
+    const task_id = Number(req.params.id)
+    const task = await db.findTaskById(task_id)
+    if (task == null){
+      res.status(404).json({error: `Task_id ${task_id} not found`})
     } else {
-      const todo = await db.deleteTask(task_id)
-      res.status(200).json(todo)
+      const authorised = await db.findAccessControlByTodoidUid(task.todo_id, uid)
+      if (authorised === null || authorised.role === 'read-only') {
+        res.status(403).json({error: `User not authorised to delete task_id ${task_id}`})
+      } else {
+        const todo = await db.deleteTask(task_id)
+        res.status(200).json(todo)
+      }
     }
-  }
-})
+  })
 
   return router
 }

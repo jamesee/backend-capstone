@@ -10,38 +10,67 @@ module.exports = (db, amqpService) => {
    * @openapi
    * components:
    *  schemas:
-   *    Item:
+   *    Todo:
    *      type: object
    *      required:
-   *        - name
-   *        - quantity
+   *        - title
+   *        - update_by
+   *        - due_date
+   *        - is_completed
+   *        - is_deleted
    *      properties:
-   *        name:
+   *        title:
+   *          type: string   
+   *        updated_by:
    *          type: string
-   *        quantity:
+   *        due_date:
+   *          type: string
+   *          format: date
+   *        is_completed:
+   *          type: boolean  
+   *        is_deleted:
+   *          type: boolean
+   */
+
+    /**
+   * @openapi
+   * components:
+   *  schemas:
+   *    PublishEmail:
+   *      type: object
+   *      required:
+   *        - todo_id
+   *        - emails
+   *      properties:
+   *        todo_id:
    *          type: integer
+   *        emails:
+   *          type: array
+   *          items:
+   *            type: string
+   *            format: email 
    */
 
   /**
    * @openapi
-   * /items:
+   * /todos:
    *  post:
    *    tags:
-   *    - items
-   *    description: Create an item
+   *    - todos
+   *    description: Create a todo 
    *    requestBody:
    *      required: true
    *      content:
    *        application/json:
    *          schema:
-   *            $ref: '#/components/schemas/Item'
+   *            $ref: '#/components/schemas/Todo'
    *    responses:
    *      201:
    *        description: Created
    *        content:
    *          application/json:
    *            schema:
-   *              $ref: '#/components/schemas/Item'
+   *              $ref: '#/components/schemas/Todo'
    */
   router.post('/', async (req, res, next) => {
     const {uid, username } = req
@@ -49,19 +78,17 @@ module.exports = (db, amqpService) => {
     const newTodo = new Todo({ title, updated_by: username, due_date, is_completed, is_deleted })
     const todo = await db.insertTodo(newTodo)
     const newAccessControl = new AccessControl({todo_id : todo.todo_id, user_id: uid, role: 'creator'})
-    // console.log(todo)
-    // console.log(newAccessControl)
     await db.insertAccessControl(newAccessControl)
     res.status(201).json(todo)
   })
 
   /**
    * @openapi
-   * /items:
+   * /todos:
    *  get:
    *    tags:
-   *    - items
-   *    description: Get all items
+   *    - todos
+   *    description: Get all todos  by uid signed in JWT token
    *    responses:
    *      200:
    *        description: OK
@@ -70,7 +97,7 @@ module.exports = (db, amqpService) => {
    *            schema:
    *              type: array
    *              items:
-   *                $ref: '#/components/schemas/Item'
+   *                $ref: '#/components/schemas/Todo'
    */
   router.get('/', async (req, res, next) => {
     const {uid } = req
@@ -80,11 +107,11 @@ module.exports = (db, amqpService) => {
 
   /**
    * @openapi
-   * /items/{id}:
+   * /todos/{id}:
    *  get:
    *    tags:
-   *    - items
-   *    description: Get item
+   *    - todos
+   *    description: Get todo based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
    *        name: id
@@ -97,23 +124,24 @@ module.exports = (db, amqpService) => {
    *        content:
    *          application/json:
    *            schema:
-   *              $ref: '#/components/schemas/Item'
+   *              $ref: '#/components/schemas/Todo'
    */
   router.get('/:id', async (req, res, next) => {
-    const { uid } = req
-    const todo_id = Number(req.params.id)
-    const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
-    if (authorised === null || authorised.role === 'read-only') {
-      res.status(403).json({error: `User not authorised to access todo_id ${todo_id}`})
-    } else {
-      const todo = await db.findTodoByTodoidUid(todo_id, uid);
-      if (todo) {
-        res.json(todo)
+      const { uid } = req
+      const todo_id = Number(req.params.id)
+      const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
+      if (authorised === null || authorised.role === 'read-only') {
+        res.status(403).json({error: `User not authorised to access todo_id ${todo_id}`})
       } else {
-        res.status(400).json({error: `Todo_id ${todo_id} not found`})
+        const todo = await db.findTodoByTodoidUid(todo_id, uid);
+        if (todo) {
+          res.json(todo)
+        } else {
+          res.status(400).json({error: `Todo_id ${todo_id} not found`})
+        }
       }
-    }
   })
+
   // router.get('/:id', async (req, res, next) => {
   //   const { uid } = req
   //   const todo_id = req.params.id
@@ -127,11 +155,11 @@ module.exports = (db, amqpService) => {
 
   /**
    * @openapi
-   * /items/{id}:
+   * /todos/{id}:
    *  put:
    *    tags:
-   *    - items
-   *    description: Update an item
+   *    - todos
+   *    description: Update a todo based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
    *        name: id
@@ -143,16 +171,15 @@ module.exports = (db, amqpService) => {
    *      content:
    *        application/json:
    *          schema:
-   *            $ref: '#/components/schemas/Item'
+   *            $ref: '#/components/schemas/Todo'
    *    responses:
    *      200:
    *        description: OK
    *        content:
    *          application/json:
    *            schema:
-   *              $ref: '#/components/schemas/Item'
+   *              $ref: '#/components/schemas/Todo'
    */
-
   router.put('/:id', async (req, res, next) => {
     const { uid, username } = req
     const todo_id = Number(req.params.id)
@@ -180,11 +207,11 @@ module.exports = (db, amqpService) => {
 
   /**
    * @openapi
-   * /items/{id}:
+   * /todos/{id}:
    *  delete:
    *    tags:
-   *    - items
-   *    description: Delete an item
+   *    - todos
+   *    description: Soft delete a todo based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
    *        name: id
@@ -192,45 +219,60 @@ module.exports = (db, amqpService) => {
    *          type: integer
    *        required: true
    *    responses:
-   *      200:
+  *      200:
    *        description: OK
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Todo'
    */
-
   router.delete('/:id', async (req, res, next) => {
-    // const todo_id = req.params.id
-  //   const success = await db.deleteTodo(todo_id)
-  //   if (success) {
-  //     res.send(`Deleted item ${todo_id} successfully`)
-  //   } else {
-  //     res.status(400).send(`Item id ${todo_id} not found`)
-  //   }
-  // })
-  const { uid } = req
-  const todo_id = Number(req.params.id)
-  const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
-  if (authorised === null || authorised.role === 'read-only') {
-    res.status(403).json({error: `User not authorised to update todo_id ${todo_id}`})
-  } else {
-    const todo = await db.deleteTodo(todo_id)
-    todo ? res.status(200).json(todo): res.status(404).json({error: `Item id ${todo_id} not found`});
-  }
-})
-
-
-
-router.post('/:id/emails', async (req, res, next) => {
-  const {uid, username } = req
-  const todo_id = Number(req.params.id)
-  const { emails } = req.body
-
-  emails.forEach(async (email) => {
-    console.log(email)
-    await amqpService.publishEmail(email, todo_id)
+      const { uid } = req
+      const todo_id = Number(req.params.id)
+      const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
+      if (authorised === null || authorised.role === 'read-only') {
+        res.status(403).json({error: `User not authorised to update todo_id ${todo_id}`})
+      } else {
+        const todo = await db.deleteTodo(todo_id)
+        todo ? res.status(200).json(todo): res.status(404).json({error: `Item id ${todo_id} not found`});
+      }
   })
 
-  // console.log(`todo_id: ${todo_id}, email : ${emails}`)
-  res.status(201).json({todo_id, emails})
-})
+
+  /**
+   * @openapi
+   * /todos/{id}/emails:
+   *  post:
+   *    tags:
+   *    - todos
+   *    description: Submit an array of emails for user_id registration into AccessControls table 
+   *    requestBody:
+   *      required: true
+   *      content:
+   *        application/json:
+   *          schema:
+   *            $ref: '#/components/schemas/PublishEmail'
+   *    responses:
+   *      201:
+   *        description: Created
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/PublishEmail'
+   */
+  router.post('/:id/emails', async (req, res, next) => {
+    const {uid, username } = req
+    const todo_id = Number(req.params.id)
+    const { emails } = req.body
+
+    emails.forEach(async (email) => {
+      console.log(email)
+      await amqpService.publishEmail(email, todo_id)
+    })
+
+    // console.log(`todo_id: ${todo_id}, email : ${emails}`)
+    res.status(201).json({todo_id, emails})
+  })
 
 
   return router
