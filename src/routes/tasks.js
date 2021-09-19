@@ -88,6 +88,12 @@ module.exports = (db) => {
    *              type: array
    *              items:
    *                $ref: '#/components/schemas/Task'
+   *      403:
+   *        description: No access-privilege
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Error'
    */
   router.get('/', async (req, res, next) => {
     const { uid } = req
@@ -115,6 +121,12 @@ module.exports = (db) => {
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/Task'
+   *      403:
+   *        description: No access-privilege
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Error'
    */
   router.get('/:id', async (req, res, next) => {
     const {uid} = req
@@ -153,8 +165,13 @@ module.exports = (db) => {
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/Task'
+   *      403:
+   *        description: No access-privilege
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Error'
    */
-
   router.put('/:id', async (req, res, next) => {
     const { uid, username } = req
     const task_id = Number(req.params.id)
@@ -190,6 +207,12 @@ module.exports = (db) => {
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/Task'
+   *      403:
+   *        description: No access-privilege
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Error'
    */
   router.delete('/:id', async (req, res, next) => {
     const { uid } = req

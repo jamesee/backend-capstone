@@ -1,7 +1,6 @@
 const express = require('express')
 const swaggerUi = require('swagger-ui-express')
 const swaggerJsdoc = require('swagger-jsdoc')
-const path = require('path')
 
 module.exports = (authMiddleware, authService, amqpService, db) => {
   const router = express.Router()
@@ -15,8 +14,7 @@ module.exports = (authMiddleware, authService, amqpService, db) => {
    *      200:
    *        description: OK
    */
-
-   router.get('/', (req, res, next) => {
+  router.get('/', (req, res, next) => {
     res.send('Hello world!')
   })
 
@@ -29,7 +27,7 @@ module.exports = (authMiddleware, authService, amqpService, db) => {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Backend Service',
+        title: 'Backend Dev Capstone',
         version: '1.0.0',
       },
     },

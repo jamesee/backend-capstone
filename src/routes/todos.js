@@ -32,7 +32,7 @@ module.exports = (db, amqpService) => {
    *          type: boolean
    */
 
-    /**
+  /**
    * @openapi
    * components:
    *  schemas:
@@ -49,6 +49,19 @@ module.exports = (db, amqpService) => {
    *          items:
    *            type: string
    *            format: email 
+   */
+
+  /**
+   * @openapi
+   * components:
+   *  schemas:
+   *    Error:
+   *      type: object
+   *      required:
+   *        - error
+   *      properties:
+   *        error:
+   *          type: string
    */
 
   /**
@@ -98,6 +111,12 @@ module.exports = (db, amqpService) => {
    *              type: array
    *              items:
    *                $ref: '#/components/schemas/Todo'
+   *      403:
+   *        description: No access-privilege
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Error'
    */
   router.get('/', async (req, res, next) => {
     const {uid } = req
@@ -125,6 +144,12 @@ module.exports = (db, amqpService) => {
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/Todo'
+   *      403:
+   *        description: No access-privilege
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Error'
    */
   router.get('/:id', async (req, res, next) => {
       const { uid } = req
@@ -179,6 +204,12 @@ module.exports = (db, amqpService) => {
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/Todo'
+   *      403:
+   *        description: No access-privilege
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Error'
    */
   router.put('/:id', async (req, res, next) => {
     const { uid, username } = req
@@ -225,6 +256,12 @@ module.exports = (db, amqpService) => {
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/Todo'
+   *      403:
+   *        description: No access-privilege
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Error'
    */
   router.delete('/:id', async (req, res, next) => {
       const { uid } = req
@@ -253,8 +290,8 @@ module.exports = (db, amqpService) => {
    *          schema:
    *            $ref: '#/components/schemas/PublishEmail'
    *    responses:
-   *      201:
-   *        description: Created
+   *      200:
+   *        description: Sumbitted
    *        content:
    *          application/json:
    *            schema:
