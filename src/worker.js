@@ -20,12 +20,12 @@ async function main () {
 
     service.registerAccessControl(data.email, data.todo_id)
     .then(()=>{
-      console.log("[INFO] Successfully inserted data into access_control table")
+      console.log("[INFO] Channel ack sent.")
       channel.ack(msg)
     })
     .catch((err) => {
       console.log(err)
-      channel.ack(msg)
+      channel.nack(msg)
     })
   })
 }

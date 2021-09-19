@@ -6,14 +6,19 @@ module.exports = (db) => {
   service.registerAccessControl = async (email, todo_id) => {
     const todo = await db.findTodoById(todo_id)
     const user = await db.findUserByEmail(email)
-    // console.log(user)
-    // console.log(todo)
+ 
     if (user && todo){
-      console.log(`[INFO] Registered user ${user.email} and valid todo_id ${todo_id}`)
-      const newAccessControl = new AccessControl({todo_id : todo.todo_id, user_id: user.id, role: 'collaborator'})
-      await db.insertAccessControl(newAccessControl)
+      // to check whether the user already has access-privilege
+      const access = await db.findAccessControlByTodoidUid(todo_id, user.id)
+      if (access) {
+        console.log(`[INFO] User ${email} already has access-privilege to todo_id ${todo_id}. Abort registration ...`)
+      } else {
+        console.log(`[INFO] Registered user ${email} and valid todo_id ${todo_id}`)
+        const newAccessControl = new AccessControl({todo_id : todo.todo_id, user_id: user.id, role: 'collaborator'})
+        await db.insertAccessControl(newAccessControl)
+      }
     } else {
-      console.log(`[INFO] Unregistered user ${user.email} or invalid todo_id ${todo_id} ! Do nothing ... `)
+      console.log(`[INFO] Unregistered user ${email} or invalid todo_id ${todo_id} ! Abort registration ... `)
     }
   }
 
