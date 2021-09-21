@@ -50,5 +50,14 @@ module.exports = (pool) => {
     return res.rowCount > 0
   }
 
+  db.deleteAccessControlByTodoid = async (todo_id) => {
+    const res = await pool.query(
+      'DELETE FROM Access_controls WHERE todo_id=$1',
+      [todo_id]
+    )
+    console.log(res)
+    return res.rowCount > 0
+  }
+
   return db
 }

@@ -18,7 +18,7 @@ async function main () {
     const data = JSON.parse(msg.content)
     console.log('Received:', data)
 
-    service.registerAccessControl(data.email, data.todo_id)
+    service.registerAccessControl(data.email, data.role, data.todo_id)
     .then(()=>{
       console.log("[INFO] Channel ack sent.")
       channel.ack(msg)

@@ -70,5 +70,19 @@ module.exports = (pool) => {
     return new Todo(res.rows[0])
   }
 
+  // db.deleteTodoByTodoIdUid = async (todo_id, user_id) => {
+  //   //remove access-privilege from AccessControls table
+  //   await pool.query(
+  //     'DELETE FROM Access_controls WHERE todo_id=$1 and user_id=$2',
+  //     [todo_id, user_id]
+  //   )
+
+  //   const res = await pool.query(
+  //     'UPDATE Todos SET is_deleted=$2 WHERE todo_id=$1 RETURNING *',
+  //     [todo_id, true]
+  //   )
+  //   return new Todo(res.rows[0])
+  // }
+
   return db
 }

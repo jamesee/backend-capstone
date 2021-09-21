@@ -3,6 +3,7 @@ const Task = require('../models/task')
 
 module.exports = (db) => {
   const router = express.Router()
+  function isInteger(n) { return /^\+?(0|[1-9]\d*)$/.test(n); } 
 
   /**
    * @openapi
@@ -131,6 +132,12 @@ module.exports = (db) => {
   router.get('/:id', async (req, res, next) => {
     const {uid} = req
     const task_id = Number(req.params.id)
+
+    if(!isInteger(task_id)) {
+      res.status(400).json({error: `Please provide a valid task_id`})
+      return
+    }
+    
     const task = await db.findTaskByTaskidUid(task_id, uid);
     if (task) {
       res.status(200).json(task)
@@ -177,6 +184,16 @@ module.exports = (db) => {
     const task_id = Number(req.params.id)
     const { todo_id, title, description, due_date, is_completed, is_deleted} = req.body
 
+    if(!isInteger(task_id)) {
+      res.status(400).json({error: `Please provide a valid task_id`})
+      return
+    }
+
+    if(!isInteger(todo_id)) {
+      res.status(400).json({error: `Please provide a valid todo_id`})
+      return
+    }
+
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
     if (authorised === null || authorised.role === 'read-only') {
       res.status(403).json({error:`User not authorised to update task_id ${task_id}`})
@@ -217,6 +234,12 @@ module.exports = (db) => {
   router.delete('/:id', async (req, res, next) => {
     const { uid } = req
     const task_id = Number(req.params.id)
+
+    if(!isInteger(task_id)) {
+      res.status(400).json({error: `Please provide a valid task_id`})
+      return
+    }
+
     const task = await db.findTaskById(task_id)
     if (task == null){
       res.status(404).json({error: `Task_id ${task_id} not found`})
