@@ -9,7 +9,7 @@ This is the end-of-module final project for our learning of backend Dev at SUTD.
 
 # Entity Relationship and Schema
 
-The entity relationship chart is as shown below:
+The entity relationship chart is shown below: <br><br>
 ![entity-relationship](images/entity-relationship.png)
 
 The sql schema is as follows:
@@ -33,29 +33,29 @@ CREATE TABLE IF NOT EXISTS Todos (
 )
 
 CREATE TABLE IF NOT EXISTS Tasks (
-task_id           SERIAL PRIMARY KEY,
-todo_id           INTEGER NOT NULL,
-title             VARCHAR(128) NOT NULL,
-description       VARCHAR(255) NOT NULL,
-updated_by        VARCHAR(100) NOT NULL,
-due_date          DATE NOT NULL,
-is_completed      BOOLEAN NOT NULL,
-is_deleted        BOOLEAN NOT NULL,
-create_at         DATE NOT NULL DEFAULT CURRENT_DATE,
-FOREIGN KEY (todo_id) REFERENCES Todos(todo_id) ON DELETE CASCADE
+   task_id           SERIAL PRIMARY KEY,
+   todo_id           INTEGER NOT NULL,
+   title             VARCHAR(128) NOT NULL,
+   description       VARCHAR(255) NOT NULL,
+   updated_by        VARCHAR(100) NOT NULL,
+   due_date          DATE NOT NULL,
+   is_completed      BOOLEAN NOT NULL,
+   is_deleted        BOOLEAN NOT NULL,
+   create_at         DATE NOT NULL DEFAULT CURRENT_DATE,
+   FOREIGN KEY (todo_id) REFERENCES Todos(todo_id) ON DELETE CASCADE
 )
 
 DROP TYPE IF EXISTS my_roles;
 CREATE TYPE my_roles AS ENUM ('creator', 'collaborator', 'read-only');
 
 CREATE TABLE IF NOT EXISTS Access_controls (
-access_id         SERIAL PRIMARY KEY,
-todo_id           INTEGER NOT NULL,
-user_id           INTEGER NOT NULL,
-role              my_roles NOT NULL,
-create_at         DATE NOT NULL DEFAULT CURRENT_DATE,
-FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
-FOREIGN KEY (todo_id) REFERENCES Todos(todo_id) ON DELETE CASCADE
+   access_id         SERIAL PRIMARY KEY,
+   todo_id           INTEGER NOT NULL,
+   user_id           INTEGER NOT NULL,
+   role              my_roles NOT NULL,
+   create_at         DATE NOT NULL DEFAULT CURRENT_DATE,
+   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+   FOREIGN KEY (todo_id) REFERENCES Todos(todo_id) ON DELETE CASCADE
 )
 
 ```
@@ -151,6 +151,23 @@ https://backenddev-capstone.herokuapp.com/api-docs
 ## Steps to demostrate the APIs 
 
 **<u>Step 1</u>**
-   - test
-   -   
-   - test2
+Register 5 accounts using bogus emails (james1@gmail.com,james2@gmail.com, james3@gmail.com,james4@gmail.com,james5@gmail.com )
+![register](images/register.png)
+![users table](images/users-table-after-registration.png)
+
+**<u>Step 2</u>**
+Login each account with the email and password to obtain the JWT token for access to api.
+![login](images/login.png)
+
+**<u>Step 3</u>**
+Cut and paste the JWT token of james1 and james2 to the Auth/Bearer of postman/thunder client to create 5 todo lists each using the ***POST /todos*** api respectively:
+![login](images/create-todos.png)
+![todos table](images/todos-after-createtodos.png)
+
+**<u>Step 4</u>**
+To show that user can only access the todos one created, 
+   - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and ***GET /todos***
+   - cut and paste <u>james2's JWT token</u> to the Auth/Brearer and ***GET /todos***
+   | James1 | James2 |
+   | --- | --- |
+   |![James 1](images/get-alltodos-james1.png)|![James 2](images/get-alltodos-james2.png)|
