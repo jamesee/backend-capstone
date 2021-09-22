@@ -83,6 +83,16 @@ $ npm run dev
 $ npm run start
 ```
 
+## Local Deployment
+
+```bash
+# start postgres docker container
+$ source backup/postgres-docker.sh
+
+# start rabbitmq docker container
+$ source  backup/rabbitMQ-docker.sh
+```
+
 ## Heroku Deployment
 
 ### App Setup
@@ -158,18 +168,18 @@ https://backenddev-capstone.herokuapp.com/api-docs
 
 **<u>Step 1: Register </u>**
 Register 5 accounts using bogus emails (james1@gmail.com,james2@gmail.com, james3@gmail.com,james4@gmail.com,james5@gmail.com )
-![register](images/register.png)
-![users table](images/users-table-after-registration.png)
+![register](images/1-register.png)
+![users table](images/1-users-table-after-registration.png)
 
 **<u>Step 2: Login </u>**
 Login each account with the email and password to obtain the JWT token for access to api.
-![login](images/login.png)
+![login](images/2-login.png)
 
 **<u>Step 3: Create Todo </u>**
 Cut and paste the JWT token of james1 and james2 to the Auth/Bearer of postman/thunder client to create 5 todo lists each using the ***POST /todos*** api respectively:
-![login](images/create-todos.png)
-![todos table](images/todos-after-createtodos.png)
-![access controls table](images/accesscontrols-after-createtodos.png)
+![login](images/3-create-todos.png)
+![todos table](images/3-todos-after-createtodos.png)
+![access controls table](images/3-accesscontrols-after-createtodos.png)
 
 
 **<u>Step 4: Read Todos </u>**
@@ -180,14 +190,14 @@ To demonstrate that one can only access the todos one created,
 
 | James1 | James2 |
 |:-------------------------: |:-------------------------: |
-| ![James1](images/get-alltodos-james1.png) | ![James2](images/get-alltodos-james2.png) |
+| ![James1](images/4-get-alltodos-james1.png) | ![James2](images/4-get-alltodos-james2.png) |
 
 **<u>Step 5: Update Todo </u>**
 To demonstrate that one can only update the todos one created, 
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /todos/1***
-![update todos1 James1](images/update-todos1-james1.png)
+![update todos1 James1](images/5-update-todos1-james1.png)
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /todos/15***
-![update todos15 James1](images/update-todos15-james1.png)
+![update todos15 James1](images/5-update-todos15-james1.png)
 
 **<u>Step 6: Delete Todo</u>**
 To demonstrate that one can only delete the todos one created,
@@ -230,3 +240,26 @@ To demonstrate that one can only delete the tasks one created,
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***DELETE /todos/15***
 ![delete task16 James1](images/10-delete-task16-james1.png)
 
+
+**<u>Step 11: Submit sharelist to share todo list </u>**
+The creator of the todo-list can give access-priviledge to collaborators, who in-turn can invite others to collaborate on the todo-list.
+There are 3 roles created, namely "creator", "collaborator" and "read-only". Role "creator" and role "collaborator" have access-rights to edit todo-list, create tasks under the todo-list, and soft delete the todo-list.  Upon soft-delete, the access-rights will be deleted from the AccessControls table of the database. Role "read-only" only has access-rights to read.
+
+To demonstrate the above-mentioned features,
+   1. Login as james1@gmail.com and copy the JWT token.
+   2. Paste the token in the Auth/Bearer and submit sharelist at ***POST /todos/2/share***. As can be seen below, james2, james3, james4 and james5 are registered into the AccessControls table and have access-rights to todo_id=2.
+
+   ![submit sharelist](images/11-submit-sharelist-todo2-james1.png)
+   ![access controls](images/11-accesscontrols-todo2-sharelist-james1.png)
+
+   3.  Now submit the following sharelist. As james6@gmail.com is not a registered user, the submission to share todo_id=2 will be ignored. As for james2 and james5, as both users have been submited in the above (11-2), to avoid duplications of access-priviledge, both will be ignored as well. 
+   ![unregisted user and duplicated submission](images/11-3-sharelist-todo2-james1.png)
+
+   4. Now login as james5@gmail.com, and update todo_id=2 ***PUT /todos/2*** and task_id=5  ***PUT /tasks/5***. As james5 has been given access to todo_id=2 at above (11-2), james5 now can update todo_id=2 and all the tasks (e.g. task_id=5) under todo_id=2.
+   ![update todo2 james5](images/11-4-update-todo2-james5.png)
+   ![update task5 james5](images/11-4-update-task5-james5.png)
+
+   5. Now we can verify that james5 can access all tasks under todo_id=2 by using api ***GET /todos*** and ***GET /tasks***.
+   ![getalltodos james5](images/11-5-getalltodos-james5.png)
+   ![getalltasks james5](images/11-5-getalltasks-james5.png)
+   ![jwt-token james5](images/11-5-jwt-token-james5.png)

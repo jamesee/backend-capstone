@@ -1,20 +1,26 @@
 const { Pool } = require('pg')
 const fs = require('fs')
 
-// Heroku enviroment
-// let pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: {
-//     require: true,
-//     rejectUnauthorized: false,
-//     ca: fs.readFileSync(`${__dirname}/global-bundle.pem`)
-//   }
-// })
 
-// local environment 
-let pool = new Pool({
-    connectionString: process.env.DATABASE_URL
-  })
+let pool;
+
+if (process.env.HEROKU === "true"){
+    // Heroku enviroment
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+        ca: fs.readFileSync(`${__dirname}/global-bundle.pem`)
+      }
+    })
+} else {
+    // local environment 
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL
+    })
+}
+
 
 const db = {
   ...require('./access-controls')(pool),
