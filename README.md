@@ -166,23 +166,23 @@ https://backenddev-capstone.herokuapp.com/api-docs
 
 ## Steps to demostrate the functionalities of the APIs 
 
-**<u>Step 1: Register </u>**
+**<u>[ Step 1: Register ]</u>**
 Register 5 accounts using bogus emails (james1@gmail.com,james2@gmail.com, james3@gmail.com,james4@gmail.com,james5@gmail.com )
 ![register](images/1-register.png)
 ![users table](images/1-users-table-after-registration.png)
 
-**<u>Step 2: Login </u>**
+**<u>[ Step 2: Login ]</u>**
 Login each account with the email and password to obtain the JWT token for access to api.
 ![login](images/2-login.png)
 
-**<u>Step 3: Create Todo </u>**
+**<u>[Step 3: Create Todo][</u>**
 Cut and paste the JWT token of james1 and james2 to the Auth/Bearer of postman/thunder client to create 5 todo lists each using the ***POST /todos*** api respectively:
 ![login](images/3-create-todos.png)
 ![todos table](images/3-todos-after-createtodos.png)
 ![access controls table](images/3-accesscontrols-after-createtodos.png)
 
 
-**<u>Step 4: Read Todos </u>**
+**<u>[ Step 4: Read Todos ]</u>**
 To demonstrate that one can only access the todos one created, 
    - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and ***GET /todos***
    - cut and paste <u>james2's JWT token</u> to the Auth/Brearer and ***GET /todos***
@@ -192,14 +192,14 @@ To demonstrate that one can only access the todos one created,
 |:-------------------------: |:-------------------------: |
 | ![James1](images/4-get-alltodos-james1.png) | ![James2](images/4-get-alltodos-james2.png) |
 
-**<u>Step 5: Update Todo </u>**
+**<u>[ Step 5: Update Todo ]</u>**
 To demonstrate that one can only update the todos one created, 
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /todos/1***
 ![update todos1 James1](images/5-update-todos1-james1.png)
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /todos/15***
 ![update todos15 James1](images/5-update-todos15-james1.png)
 
-**<u>Step 6: Delete Todo</u>**
+**<u>[ Step 6: Delete Todo ]</u>**
 To demonstrate that one can only delete the todos one created,
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***DELETE /todos/1***
 ![update todos1 James1](images/6-delete-todos1-james1.png)
@@ -207,7 +207,7 @@ To demonstrate that one can only delete the todos one created,
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***DELETE /todos/15***
 ![update todos1 James1](images/6-delete-todos15-james1.png)
 
-**<u>Step 7: Create Tasks </u>**
+**<u>[ Step 7: Create Tasks ]</u>**
 Cut and paste the JWT token of james1 and james2 to the Auth/Bearer of postman/thunder client to create 5 tasks each with todo_id=2 and todo_id=15 respectively using the ***POST /todos/{todo_id}/tasks*** api.
 
 Please note that james2 is not allowed to create task in todo_id=2 because he has no access to todo_id=2.
@@ -215,7 +215,7 @@ Please note that james2 is not allowed to create task in todo_id=2 because he ha
 ![create task](images/7-create-task-todo2-james2.png)
 ![tasks table](images/7-tasks-after-createtasks-james1-james2.png)
 
-**<u>Step 8: Read Tasks </u>**
+**<u>[ Step 8: Read Tasks ]</u>**
 To demonstrate that one can only access the tasks one created, 
    - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and ***GET /tasks***
    - cut and paste <u>james2's JWT token</u> to the Auth/Brearer and ***GET /tasks***
@@ -225,14 +225,14 @@ To demonstrate that one can only access the tasks one created,
 | ![James1](images/8-get-alltasks-james1.png) | ![James2](images/8-get-alltasks-james2.png) |
 
 
-**<u>Step 9: Update Task </u>**
+**<u>[ Step 9: Update Task ]</u>**
 To demonstrate that one can only update the tasks one created, 
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /tasks/2***
 ![update todos1 James1](images/9-update-task2-james1.png)
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /todos/16***. Please note that James1 has no access to task16.
 ![update todos16 James1](images/9-update-task16-james1.png)
 
-**<u>Step 10: Delete Task </u>**
+**<u>[ Step 10: Delete Task ]</u>**
 To demonstrate that one can only delete the tasks one created,
 - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***DELETE /tasks/2***
 ![delete task2 James1](images/10-delete-task2-james1.png)
@@ -241,7 +241,7 @@ To demonstrate that one can only delete the tasks one created,
 ![delete task16 James1](images/10-delete-task16-james1.png)
 
 
-**<u>Step 11: Submit sharelist to share todo list </u>**
+**<u>[ Step 11: Submit sharelist to share todo list ]</u>**
 The creator of the todo-list can give access-priviledge to collaborators, who in-turn can invite others to collaborate on the todo-list.
 There are 3 roles created, namely "creator", "collaborator" and "read-only". Role "creator" and role "collaborator" have access-rights to edit todo-list, create tasks under the todo-list, and soft delete the todo-list.  Upon soft-delete, the access-rights will be deleted from the AccessControls table of the database. Role "read-only" only has access-rights to read.
 
