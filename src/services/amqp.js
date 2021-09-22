@@ -19,19 +19,19 @@ module.exports = () => {
     await client.close()
   }
 
-  // service.publishEmail = async (email, role, todo_id) => {
-  //   const client = await amqplib.connect(URL)
-  //   const channel = await client.createChannel()
-  //   await channel.assertQueue(ACCESSCONTROL_QUEUE);
-  //   const result = await channel.sendToQueue(ACCESSCONTROL_QUEUE, Buffer.from(JSON.stringify({email, role, todo_id})), {
-  //     contentType: 'application/json'})
-  //   // console.log(result)
+  service.publishEmail = async (email, role, todo_id) => {
+    const client = await amqplib.connect(URL)
+    const channel = await client.createChannel()
+    await channel.assertQueue(ACCESSCONTROL_QUEUE);
+    const result = await channel.sendToQueue(ACCESSCONTROL_QUEUE, Buffer.from(JSON.stringify({email, role, todo_id})), {
+      contentType: 'application/json'})
+    // console.log(result)
 
-  //   await channel.close()
-  //   await client.close()
+    await channel.close()
+    await client.close()
 
-  //   return result
-  // }
+    return result
+  }
 
   // service.publishEmail = async (email, role, todo_id) => {
   //   const open = amqplib.connect();
@@ -53,16 +53,16 @@ module.exports = () => {
   //   });    
   // }
 
-  service.publishEmail = async (email, role, todo_id) => {
-    const open = amqplib.connect();
-    open
-      .then(async function (c) {
-        c.createChannel().then(async function (ch) {
-          ch.sendToQueue(ACCESSCONTROL_QUEUE, Buffer.from(JSON.stringify({ email, role, todo_id })), {},
-          );
-        })
-      });
-  }
+  // service.publishEmail = async (email, role, todo_id) => {
+  //   const open = amqplib.connect();
+  //   open
+  //     .then(async function (c) {
+  //       c.createChannel().then(async function (ch) {
+  //         ch.sendToQueue(ACCESSCONTROL_QUEUE, Buffer.from(JSON.stringify({ email, role, todo_id })), {},
+  //         );
+  //       })
+  //     });
+  // }
 
   return service
 }
