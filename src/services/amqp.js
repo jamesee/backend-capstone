@@ -19,11 +19,11 @@ module.exports = () => {
     await client.close()
   }
   
-  service.publishEmail = async (email, todo_id) => {
+  service.publishEmail = async (email, role, todo_id) => {
     const client = await amqplib.connect(URL)
     const channel = await client.createChannel()
     await channel.assertQueue(ACCESSCONTROL_QUEUE);
-    const result = await channel.sendToQueue(ACCESSCONTROL_QUEUE, Buffer.from(JSON.stringify({email, todo_id})), {
+    const result = await channel.sendToQueue(ACCESSCONTROL_QUEUE, Buffer.from(JSON.stringify({email, role, todo_id})), {
       contentType: 'application/json'})
     // console.log(result)
     
