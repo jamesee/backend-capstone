@@ -110,7 +110,7 @@ $ heroku addons:create cloudamqp:lemur
 $ heroku config:set JWT_SECRET=some_secret
 $ heroku config:set JWT_EXPIRY=900
 $ heroku config:set SALT_ROUNDS=10
-
+$ heroku config:set MYHEROKU="true"
 ```
 Create a "Procfile" at the root directory of project with the followings to instruct heroku how to start the app.
 
@@ -119,6 +119,18 @@ release: npm run db:migrate
 web: npm run start
 worker: npm run worker
 ```
+
+After upload codes to Heroku git repo, ensure that at least one web container and one worker container are running with the following command:
+```bash
+$ heroku ps:scale web=1 worker=1
+```
+
+To access the cloudamqp manager,
+
+```bash
+$ heroku addons:open cloudamqp -a backenddev-capstone
+```
+
 ### Nodejs accessing Heroku postgres add-on with TLS
 
 To access the heroku postgres add-on with TLS using Nodejs, the following settings are required.
