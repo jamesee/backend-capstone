@@ -169,10 +169,6 @@ To show that user can only access the todos one created,
    - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and ***GET /todos***
    - cut and paste <u>james2's JWT token</u> to the Auth/Brearer and ***GET /todos***
 
-<p float="left">
-  <img src="images/get-alltodos-james1.png" width="100" />
-  <img src="/images/get-alltodos-james2.png" width="100" />
-</p>
 
 | James1 | James2 |
 |:-------------------------: |:-------------------------: |
