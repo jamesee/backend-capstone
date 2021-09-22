@@ -120,8 +120,12 @@ web: npm run start
 worker: npm run worker
 ```
 
-After upload codes to Heroku git repo, ensure that at least one web container and one worker container are running with the following command:
+After uploaded codes to Heroku git repo, ensure that at least one web container and one worker container are running with the following command:
 ```bash
+# upload codes to heroku git repo
+$ git push heroku main
+
+# enable 1 web and 1 worker containers
 $ heroku ps:scale web=1 worker=1
 ```
 
