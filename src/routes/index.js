@@ -43,5 +43,6 @@ module.exports = (authMiddleware, authService, amqpService, db) => {
   router.use('/todos', require('./todos')(db, amqpService))
   router.use('/tasks', require('./tasks')(db))
 
+
   return router
 }

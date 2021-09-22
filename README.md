@@ -102,7 +102,13 @@ $ heroku config:set JWT_EXPIRY=900
 $ heroku config:set SALT_ROUNDS=10
 
 ```
+Create a "Procfile" at the root directory of project with the followings to instruct heroku how to start the app.
 
+```bash
+release: npm run db:migrate
+web: npm run start
+worker: npm run worker
+```
 ### Nodejs accessing Heroku postgres add-on with TLS
 
 To access the heroku postgres add-on with TLS using Nodejs, the following settings are required.
@@ -148,23 +154,25 @@ $ heroku open
 Swagger documentation can be found at 
 https://backenddev-capstone.herokuapp.com/api-docs
 
-## Steps to demostrate the APIs 
+## Steps to demostrate the functionalities of the APIs 
 
-**<u>Step 1</u>**
+**<u>Step 1: Register </u>**
 Register 5 accounts using bogus emails (james1@gmail.com,james2@gmail.com, james3@gmail.com,james4@gmail.com,james5@gmail.com )
 ![register](images/register.png)
 ![users table](images/users-table-after-registration.png)
 
-**<u>Step 2</u>**
+**<u>Step 2: Login </u>**
 Login each account with the email and password to obtain the JWT token for access to api.
 ![login](images/login.png)
 
-**<u>Step 3</u>**
+**<u>Step 3: Create Todo </u>**
 Cut and paste the JWT token of james1 and james2 to the Auth/Bearer of postman/thunder client to create 5 todo lists each using the ***POST /todos*** api respectively:
 ![login](images/create-todos.png)
 ![todos table](images/todos-after-createtodos.png)
+![access controls table](images/accesscontrols-after-createtodos.png)
 
-**<u>Step 4</u>**
+
+**<u>Step 4: Read Todos </u>**
 To demonstrate that one can only access the todos one created, 
    - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and ***GET /todos***
    - cut and paste <u>james2's JWT token</u> to the Auth/Brearer and ***GET /todos***
@@ -174,9 +182,51 @@ To demonstrate that one can only access the todos one created,
 |:-------------------------: |:-------------------------: |
 | ![James1](images/get-alltodos-james1.png) | ![James2](images/get-alltodos-james2.png) |
 
-**<u>Step 5</u>**
+**<u>Step 5: Update Todo </u>**
 To demonstrate that one can only update the todos one created, 
-- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***UPDATE /todos/1***
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /todos/1***
 ![update todos1 James1](images/update-todos1-james1.png)
-- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***UPDATE /todos/15***
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /todos/15***
 ![update todos15 James1](images/update-todos15-james1.png)
+
+**<u>Step 6: Delete Todo</u>**
+To demonstrate that one can only delete the todos one created,
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***DELETE /todos/1***
+![update todos1 James1](images/6-delete-todos1-james1.png)
+![update todos1 James1](images/6-todos-after-delete-todos1-james1.png)
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***DELETE /todos/15***
+![update todos1 James1](images/6-delete-todos15-james1.png)
+
+**<u>Step 7: Create Tasks </u>**
+Cut and paste the JWT token of james1 and james2 to the Auth/Bearer of postman/thunder client to create 5 tasks each with todo_id=2 and todo_id=15 respectively using the ***POST /todos/{todo_id}/tasks*** api.
+
+Please note that james2 is not allowed to create task in todo_id=2 because he has no access to todo_id=2.
+![create task](images/7-create-task-james1.png)
+![create task](images/7-create-task-todo2-james2.png)
+![tasks table](images/7-tasks-after-createtasks-james1-james2.png)
+
+**<u>Step 8: Read Tasks </u>**
+To demonstrate that one can only access the tasks one created, 
+   - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and ***GET /tasks***
+   - cut and paste <u>james2's JWT token</u> to the Auth/Brearer and ***GET /tasks***
+
+| James1 | James2 |
+|:-------------------------: |:-------------------------: |
+| ![James1](images/8-get-alltasks-james1.png) | ![James2](images/8-get-alltasks-james2.png) |
+
+
+**<u>Step 9: Update Task </u>**
+To demonstrate that one can only update the tasks one created, 
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /tasks/2***
+![update todos1 James1](images/9-update-task2-james1.png)
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***PUT /todos/16***. Please note that James1 has no access to task16.
+![update todos16 James1](images/9-update-task16-james1.png)
+
+**<u>Step 10: Delete Task </u>**
+To demonstrate that one can only delete the tasks one created,
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***DELETE /tasks/2***
+![delete task2 James1](images/10-delete-task2-james1.png)
+![tasks table after delete task2 James1](images/10-tasks-after-delete-task2-james1.png)
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***DELETE /todos/15***
+![delete task16 James1](images/10-delete-task16-james1.png)
+

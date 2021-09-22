@@ -1,5 +1,6 @@
 const express = require('express')
 const Todo = require('../models/todo')
+const Task = require('../models/task')
 const AccessControl = require('../models/access-control')
 // const email = require('../services/email')
 
@@ -123,14 +124,14 @@ module.exports = (db, amqpService) => {
 
   /**
    * @openapi
-   * /todos/{id}:
+   * /todos/{todo_id}:
    *  get:
    *    tags:
    *    - todos
    *    description: Get todo based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
-   *        name: id
+   *        name: todo_id
    *        schema:
    *          type: integer
    *        required: true
@@ -148,9 +149,9 @@ module.exports = (db, amqpService) => {
    *            schema:
    *              $ref: '#/components/schemas/Error'
    */
-  router.get('/:id', async (req, res, next) => {
+  router.get('/:todo_id', async (req, res, next) => {
     const { uid } = req
-    const todo_id = Number(req.params.id)
+    const todo_id = Number(req.params.todo_id)
 
     if (!isInteger(todo_id)) {
       res.status(400).json({ error: `Please provide a valid todo_id` })
@@ -170,27 +171,17 @@ module.exports = (db, amqpService) => {
     }
   })
 
-  // router.get('/:id', async (req, res, next) => {
-  //   const { uid } = req
-  //   const todo_id = req.params.id
-  //   const todo = await db.findTodoByTodoidUid(todo_id, uid);
-  //   if (todo) {
-  //     res.send(todo)
-  //   } else {
-  //     res.status(400).send(`Todo id ${todo_id} not found`)
-  //   }
-  // })
 
   /**
    * @openapi
-   * /todos/{id}:
+   * /todos/{todo_id}:
    *  put:
    *    tags:
    *    - todos
    *    description: Update a todo based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
-   *        name: id
+   *        name: todo_id
    *        schema:
    *          type: integer
    *        required: true
@@ -214,11 +205,9 @@ module.exports = (db, amqpService) => {
    *            schema:
    *              $ref: '#/components/schemas/Error'
    */
-  router.put('/:id', async (req, res, next) => {
-
-
+  router.put('/:todo_id', async (req, res, next) => {
     const { uid, username } = req
-    const todo_id = Number(req.params.id)
+    const todo_id = Number(req.params.todo_id)
 
     if (!isInteger(todo_id)) {
       res.status(400).json({ error: `Please provide a valid todo_id` })
@@ -236,27 +225,17 @@ module.exports = (db, amqpService) => {
     }
   })
 
-  // router.put('/:id', async (req, res, next) => {
-  //   const { uid, username } = req
-  //   const todo_id = req.params.id
-  //   const { title, due_date, is_completed, is_deleted} = req.body
-
-  //   const updatedTodo = new Todo({  title, updated_by: username, due_date, is_completed, is_deleted })
-  //   const todo = await db.updateTodoByTodoidUid(todo_id, uid, updatedTodo)
-  //   console.log(todo)
-  //   res.status(200).send(todo)
-  // })
 
   /**
    * @openapi
-   * /todos/{id}:
+   * /todos/{todo_id}:
    *  delete:
    *    tags:
    *    - todos
    *    description: Soft delete a todo based on access-privilege in AccessControls table of database
    *    parameters:
    *      - in: path
-   *        name: id
+   *        name: todo_id
    *        schema:
    *          type: integer
    *        required: true
@@ -274,9 +253,9 @@ module.exports = (db, amqpService) => {
    *            schema:
    *              $ref: '#/components/schemas/Error'
    */
-  router.delete('/:id', async (req, res, next) => {
+  router.delete('/:todo_id', async (req, res, next) => {
     const { uid } = req
-    const todo_id = Number(req.params.id)
+    const todo_id = Number(req.params.todo_id)
 
     if (!isInteger(todo_id)) {
       res.status(400).json({ error: `Please provide a valid todo_id` })
@@ -305,11 +284,65 @@ module.exports = (db, amqpService) => {
 
   /**
    * @openapi
-   * /todos/{id}/share:
+   * /todos/{todo_id}/tasks:
+   *  post:
+   *    tags:
+   *    - tasks
+   *    description: Create a Task
+   *    parameters:
+   *      - in: path
+   *        name: todo_id
+   *        schema:
+   *          type: integer
+   *        required: true
+   *    requestBody:
+   *      required: true
+   *      content:
+   *        application/json:
+   *          schema:
+   *            $ref: '#/components/schemas/Task'
+   *    responses:
+   *      201:
+   *        description: Created
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Task'
+   */
+  router.post('/:todo_id/tasks', async (req, res, next) => {
+    const { uid, username } = req
+    const { title, description, due_date, is_completed, is_deleted } = req.body
+    const todo_id = Number(req.params.todo_id)
+
+    if (!isInteger(todo_id)) {
+      res.status(400).json({ error: `Please provide a valid todo_id` })
+      return
+    }
+
+    //check whether uid has access to todo_id to create task
+    const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
+    if (authorised === null || authorised.role === 'read-only') {
+      res.status(403).json({ error: `User not authorised to create task in todo_id ${todo_id}` })
+    } else {
+      const newTask = new Task({ todo_id, title, description, updated_by: username, due_date, is_completed, is_deleted })
+      const task = await db.insertTask(newTask)
+      res.status(201).json(task)
+    }
+  })
+
+  /**
+   * @openapi
+   * /todos/{todo_id}/share:
    *  post:
    *    tags:
    *    - todos
    *    description: Submit an array [{email1, role1}, {email2, role2}, ...] for user_id registration into AccessControls table to share the todo list with todo_id={id} 
+    *    parameters:
+   *      - in: path
+   *        name: todo_id
+   *        schema:
+   *          type: integer
+   *        required: true
    *    requestBody:
    *      required: true
    *      content:
@@ -324,53 +357,33 @@ module.exports = (db, amqpService) => {
    *            schema:
    *              $ref: '#/components/schemas/PublishEmail'
    */
-  router.post('/:id/share', async (req, res, next) => {
-    const { uid, username } = req
-    const todo_id = Number(req.params.id)
-    const { emails } = req.body
+  router.post('/:todo_id/share', async (req, res, next) => {
+    const { uid } = req
+    const todo_id = Number(req.params.todo_id)
+    const { sharelist } = req.body
 
-    const privilegeCheck = await db.findAccessControlByTodoidUid(todo_id, uid)
-    if (!privilegeCheck) {
+    if (!isInteger(todo_id)) {
+      res.status(400).json({ error: `Please provide a valid todo_id` })
+      return
+    }
+
+    const accessCheck = await db.findAccessControlByTodoidUid(todo_id, uid)
+    if (!accessCheck) {
       res.status(403).json({ error: `No access-privilege to todo_id ${todo_id}` })
       return
     }
 
-    //check whether emails is an Arrray
-    if (!Array.isArray(emails)) {
-      res.status(400).json({ error: "Please provide emails array." })
+    //check whether sharelist is an Arrray
+    if (!Array.isArray(sharelist)) {
+      res.status(400).json({ error: `Please provide a sharelist array.` })
       return
     }
 
-    emails.forEach(async (item) => {
+    sharelist.forEach(async (item) => {
       await amqpService.publishEmail(item.email, item.role, todo_id)
     })
-    res.status(204).json({})
+    res.status(202).json({status: "accepted", sharelist})
   })
-
-
-
-  // router.post('/:id/emails', async (req, res, next) => {
-  //   const {uid, username } = req
-  //   const todo_id = Number(req.params.id)
-  //   const { emails } = req.body
-
-  //   const privilegeCheck = await db.findAccessControlByTodoidUid(todo_id, uid)
-  //   if (!privilegeCheck){
-  //     res.status(403).json({error: `No access-privilege to todo_id ${todo_id}`})
-  //     return
-  //   } 
-
-  //   //check whether emails is an Arrray
-  //   if (!Array.isArray(emails)){
-  //     res.status(400).json({error: "Please provide emails array."})
-  //     return
-  //   }
-
-  //   emails.forEach(async (email) => {
-  //     await amqpService.publishEmail(email,"collaborator", todo_id)
-  //   })
-  //   res.status(204).json({})
-  // })
 
 
   return router
