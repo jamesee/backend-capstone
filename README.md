@@ -166,6 +166,7 @@ https://backenddev-capstone.herokuapp.com/api-docs
 
 ## Steps to demostrate the functionalities of the APIs 
 
+
 **<u>[ Step 1: Register ]</u>**
 Register 5 accounts using bogus emails (james1@gmail.com,james2@gmail.com, james3@gmail.com,james4@gmail.com,james5@gmail.com )
 ![register](images/1-register.png)
