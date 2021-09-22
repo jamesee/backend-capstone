@@ -165,7 +165,7 @@ Cut and paste the JWT token of james1 and james2 to the Auth/Bearer of postman/t
 ![todos table](images/todos-after-createtodos.png)
 
 **<u>Step 4</u>**
-To show that user can only access the todos one created, 
+To demonstrate that one can only access the todos one created, 
    - cut and paste <u>james1's JWT token</u> to the Auth/Brearer and ***GET /todos***
    - cut and paste <u>james2's JWT token</u> to the Auth/Brearer and ***GET /todos***
 
@@ -173,3 +173,10 @@ To show that user can only access the todos one created,
 | James1 | James2 |
 |:-------------------------: |:-------------------------: |
 | ![James1](images/get-alltodos-james1.png) | ![James2](images/get-alltodos-james2.png) |
+
+**<u>Step 5</u>**
+To demonstrate that one can only update the todos one created, 
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***UPDATE /todos/1***
+![update todos1 James1](images/update-todos1-james1.png)
+- cut and paste <u>james1's JWT token</u> to the Auth/Brearer and  ***UPDATE /todos/15***
+![update todos15 James1](images/update-todos15-james1.png)
