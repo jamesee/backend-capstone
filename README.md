@@ -259,7 +259,7 @@ To demonstrate the above-mentioned features,
    ![update todo2 james5](images/11-4-update-todo2-james5.png)
    ![update task5 james5](images/11-4-update-task5-james5.png)
 
-   5. Now we can verify that james5 can access all tasks under todo_id=2 by using api ***GET /todos*** and ***GET /tasks***.
+   5. Now we can verify that james5 has access to all tasks under todo_id=2 by using api ***GET /todos*** and ***GET /tasks***.
    ![getalltodos james5](images/11-5-getalltodos-james5.png)
    ![getalltasks james5](images/11-5-getalltasks-james5.png)
    ![jwt-token james5](images/11-5-jwt-token-james5.png)

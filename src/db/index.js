@@ -4,7 +4,7 @@ const fs = require('fs')
 
 let pool;
 
-if (process.env.HEROKU === "true"){
+// if (process.env.HEROKU === "true"){
     // Heroku enviroment
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,
@@ -14,12 +14,12 @@ if (process.env.HEROKU === "true"){
         ca: fs.readFileSync(`${__dirname}/global-bundle.pem`)
       }
     })
-} else {
-    // local environment 
-    pool = new Pool({
-      connectionString: process.env.DATABASE_URL
-    })
-}
+// } else {
+//     // local environment 
+//     pool = new Pool({
+//       connectionString: process.env.DATABASE_URL
+//     })
+// }
 
 
 const db = {
