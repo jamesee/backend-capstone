@@ -57,15 +57,8 @@ module.exports = () => {
     const open = amqplib.connect();
     open
       .then(async function (c) {
-        c.createConfirmChannel().then(async function (ch) {
+        c.createChannel().then(async function (ch) {
           ch.sendToQueue(ACCESSCONTROL_QUEUE, Buffer.from(JSON.stringify({ email, role, todo_id })), {},
-            function (err, ok) {
-              if (err !== null) {
-                console.warn('Message nacked!');
-              } else {
-                console.log('Message acked');
-              }
-            }
           );
         })
       });
