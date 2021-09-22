@@ -10,7 +10,7 @@ This is the end-of-module final project for our learning of backend Dev at SUTD.
 # Entity Relationship and Schema
 
 The entity relationship chart is as shown below:
-[entity-relationship](images/entity-relationship.png)
+![entity-relationship](images/entity-relationship.png)
 
 The sql schema is as follows:
 ```sql
@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS Todos (
    create_at         DATE NOT NULL DEFAULT CURRENT_DATE
 )
 
-
 CREATE TABLE IF NOT EXISTS Tasks (
 task_id           SERIAL PRIMARY KEY,
 todo_id           INTEGER NOT NULL,
@@ -45,7 +44,6 @@ is_deleted        BOOLEAN NOT NULL,
 create_at         DATE NOT NULL DEFAULT CURRENT_DATE,
 FOREIGN KEY (todo_id) REFERENCES Todos(todo_id) ON DELETE CASCADE
 )
-
 
 DROP TYPE IF EXISTS my_roles;
 CREATE TYPE my_roles AS ENUM ('creator', 'collaborator', 'read-only');
@@ -107,7 +105,7 @@ $ heroku config:set SALT_ROUNDS=10
 
 ### Nodejs accessing Heroku postgres add-on with TLS
 
-To access the heroku postgres add-on with TLS using Nodejs, the following settings is required.
+To access the heroku postgres add-on with TLS using Nodejs, the following settings are required.
 ```js
 // Heroku enviroment
 let pool = new Pool({
