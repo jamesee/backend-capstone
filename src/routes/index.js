@@ -27,7 +27,7 @@ module.exports = (authMiddleware, authService, amqpService, db) => {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Backend Dev Capstone',
+        title: 'Backend Dev Capstone - by James Ee',
         version: '1.0.0',
       },
     },

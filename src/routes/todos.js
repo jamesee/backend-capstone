@@ -309,7 +309,7 @@ module.exports = (db, amqpService) => {
    *  post:
    *    tags:
    *    - todos
-   *    description: Submit an array of emails for user_id registration into AccessControls table 
+   *    description: Submit an array [{email1, role1}, {email2, role2}, ...] for user_id registration into AccessControls table to share the todo list with todo_id={id} 
    *    requestBody:
    *      required: true
    *      content:
