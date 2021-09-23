@@ -170,8 +170,8 @@ https://backenddev-capstone.herokuapp.com/
 
 At command prompt, 
 ```bash
-# run the app with one web container
-$ heroku ps:scale web=1
+# run the app with one web container and one worker container
+$ heroku ps:scale web=1 worker=1
 
 # a browser will be spun-up with the app url
 $ heroku open
