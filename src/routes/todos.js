@@ -1,6 +1,4 @@
 const express = require('express')
-const Todo = require('../models/todo')
-// const email = require('../services/email')
 
 module.exports = ( controllers) => {
   const router = express.Router()

@@ -1,5 +1,4 @@
 const express = require('express');
-const Task = require('../models/task')
 
 module.exports = (controllers) => {
   const router = express.Router()
