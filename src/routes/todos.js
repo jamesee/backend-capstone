@@ -159,15 +159,19 @@ module.exports = (db, amqpService) => {
     }
 
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
-    if (authorised === null || authorised.role === 'read-only') {
+    if (authorised === null) {
       res.status(403).json({ error: `User not authorised to access todo_id ${todo_id}` })
     } else {
       const todo = await db.findTodoByTodoidUid(todo_id, uid);
+      const tasks = await db.findTasksByTodoid(todo_id);
+
       if (todo) {
-        res.json(todo)
-      } else {
-        res.status(400).json({ error: `Todo_id ${todo_id} not found` })
-      }
+        // res.json(todo)
+        res.json({...todo, tasks})
+      } 
+      // else {
+      //   res.status(404).json({ error: `Todo_id ${todo_id} not found` })
+      // }
     }
   })
 
@@ -319,12 +323,15 @@ module.exports = (db, amqpService) => {
       return
     }
 
+    // console.log(req.body)
     //check whether uid has access to todo_id to create task
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
+    console.log(authorised)
     if (authorised === null || authorised.role === 'read-only') {
       res.status(403).json({ error: `User not authorised to create task in todo_id ${todo_id}` })
     } else {
       const newTask = new Task({ todo_id, title, description, updated_by: username, due_date, is_completed, is_deleted })
+      console.log(newTask)
       const task = await db.insertTask(newTask)
       res.status(201).json(task)
     }

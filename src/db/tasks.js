@@ -18,6 +18,15 @@ module.exports = (pool) => {
     return res.rows.map(row => new Task(row))
   }
 
+  db.findTasksByTodoid = async (todo_id) => {
+    const res = await pool.query(
+      // 'SELECT * FROM Tasks tk INNER JOIN Todos td on tk.todo_id=td.todo_id INNER JOIN Access_controls ac ON tk.todo_id = ac.todo_id WHERE ac.user_id=$1',
+      'SELECT * FROM Tasks WHERE todo_id = $1',
+      [todo_id]
+    )
+    return res.rows.map(row => new Task(row))
+  }
+
   db.findTasksByUid = async (uid) => {
     const res = await pool.query(
       // 'SELECT * FROM Tasks tk INNER JOIN Todos td on tk.todo_id=td.todo_id INNER JOIN Access_controls ac ON tk.todo_id = ac.todo_id WHERE ac.user_id=$1',
