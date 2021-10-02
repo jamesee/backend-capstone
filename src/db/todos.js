@@ -1,6 +1,5 @@
-const Todo = require('../models/todo')
 
-module.exports = (pool) => {
+module.exports = (pool, Todo) => {
   const db = {}
 
   db.insertTodo = async (todo) => {

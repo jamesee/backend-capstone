@@ -1,6 +1,5 @@
-const AccessControl = require('../models/access-control')
 
-module.exports = (pool) => {
+module.exports = (pool, AccessControl) => {
   const db = {}
 
   db.insertAccessControl = async (access) => {
@@ -55,7 +54,7 @@ module.exports = (pool) => {
       'DELETE FROM Access_controls WHERE todo_id=$1',
       [todo_id]
     )
-    console.log(res)
+    // console.log(res)
     return res.rowCount > 0
   }
 

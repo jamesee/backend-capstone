@@ -1,6 +1,5 @@
-const Task = require('../models/task')
 
-module.exports = (pool) => {
+module.exports = (pool, Task) => {
   const db = {}
 
   db.insertTask = async (task) => {

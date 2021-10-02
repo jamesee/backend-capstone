@@ -2,7 +2,7 @@ const express = require('express')
 const swaggerUi = require('swagger-ui-express')
 const swaggerJsdoc = require('swagger-jsdoc')
 
-module.exports = (authMiddleware, authService, amqpService, db) => {
+module.exports = (authMiddleware, controllers) => {
   const router = express.Router()
 
   /**
@@ -20,7 +20,7 @@ module.exports = (authMiddleware, authService, amqpService, db) => {
 
 
   // Auth
-  router.use('/', require('./auth')(authService, amqpService))
+  router.use('/', require('./auth')(controllers))
 
   // Swagger Docs
   const options = {
@@ -40,8 +40,8 @@ module.exports = (authMiddleware, authService, amqpService, db) => {
   router.use(authMiddleware)
 
   // router.use('/items', require('./items')(db))
-  router.use('/todos', require('./todos')(db, amqpService))
-  router.use('/tasks', require('./tasks')(db))
+  router.use('/todos', require('./todos')(controllers))
+  router.use('/tasks', require('./tasks')(controllers))
 
 
   return router

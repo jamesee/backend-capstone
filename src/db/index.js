@@ -1,47 +1,49 @@
 const { Pool } = require('pg')
 const fs = require('fs')
 
+const Task = require('../models/task')
+const Todo = require('../models/todo')
+const User = require('../models/user')
+const AccessControl = require('../models/access-control')
+
 
 let pool;
 
-if (process.env.MYHEROKU === "true"){
-    // Heroku enviroment
-    pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-        ca: fs.readFileSync(`${__dirname}/global-bundle.pem`)
-      }
-    })
+if (process.env.MYHEROKU === "true") {
+  // Heroku enviroment
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+      ca: fs.readFileSync(`${__dirname}/global-bundle.pem`)
+    }
+  })
 } else {
-    // local environment 
-    pool = new Pool({
-      connectionString: process.env.DATABASE_URL
-    })
+  // local environment 
+  pool = new Pool({connectionString: process.env.DATABASE_URL})
 }
 
 
 const db = {
-  ...require('./access-controls')(pool),
-  ...require('./tasks')(pool),
-  ...require('./todos')(pool),
-  // ...require('./items')(pool),
-  ...require('./users')(pool),
+  ...require('./access-controls')(pool, AccessControl),
+  ...require('./tasks')(pool, Task),
+  ...require('./todos')(pool, Todo),
+  ...require('./users')(pool, User),
 }
 
 db.initialise = async () => {
 
-    // delete all tables
-    // for development purpose
-    await pool.query(`
+  // delete all tables
+  // for development purpose
+  await pool.query(`
       DROP TABLE IF EXISTS access_controls;
       DROP TABLE IF EXISTS tasks;
       DROP TABLE IF EXISTS todos;
       DROP TABLE IF EXISTS users;
     `)
 
-    await pool.query(`
+  await pool.query(`
       CREATE TABLE IF NOT EXISTS Users (
         id SERIAL         PRIMARY KEY,
         username          VARCHAR(100) NOT NULL,
@@ -51,7 +53,7 @@ db.initialise = async () => {
       )
     `)
 
-    await pool.query(`
+  await pool.query(`
       CREATE TABLE IF NOT EXISTS Todos (
         todo_id           SERIAL PRIMARY KEY,
         title             VARCHAR(128) NOT NULL,

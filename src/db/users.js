@@ -1,6 +1,5 @@
-const User = require('../models/user')
 
-module.exports = (pool) => {
+module.exports = (pool, User) => {
   const db = {}
 
   db.insertUser = async (user) => {
