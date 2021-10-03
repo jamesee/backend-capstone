@@ -2,7 +2,6 @@ const express = require('express')
 const swaggerUi = require('swagger-ui-express')
 const swaggerJsdoc = require('swagger-jsdoc')
 
-const workingValidateDto = require('../middlewares/validate-dto');
 
 
 module.exports = (authMiddleware, validateDto, controllers) => {

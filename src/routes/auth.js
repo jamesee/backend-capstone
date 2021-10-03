@@ -1,7 +1,7 @@
 const express = require('express');
 
-const authSchema = require('../dto/auth-schema')
-const workingValidateDto = require('../middlewares/validate-dto');
+// const authSchema = require('../dto/auth-schema')
+// const workingValidateDto = require('../middlewares/validate-dto');
 
 
 
@@ -64,8 +64,8 @@ module.exports = (controllers, validateDto) => {
    *      400:
    *        description: Username already exists
    */
-  router.post('/register', workingValidateDto(authSchema.register), controllers.register)
-  // router.post('/register', validateDto, controllers.register)
+  // router.post('/register', workingValidateDto(authSchema.register), controllers.register)
+  router.post('/register', validateDto.register, controllers.register)
 
   /**
    * @openapi
@@ -86,8 +86,8 @@ module.exports = (controllers, validateDto) => {
    *      400:
    *        description: Invalid login credentials
    */
-  router.post('/login', workingValidateDto(authSchema.login), controllers.login)
-  // router.post('/login', validateDto, controllers.login)
+  // router.post('/login', workingValidateDto(authSchema.login), controllers.login)
+  router.post('/login', validateDto.login, controllers.login)
 
   return router
 }
