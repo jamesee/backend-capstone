@@ -58,8 +58,8 @@ module.exports = (db, amqpService, AccessControl, Todo) => {
     if (authorised === null || authorised.role === 'read-only') {
       res.status(403).json({ error: `User not authorised to update todo_id ${todo_id}` })
     } else {
-      const { title, due_date, is_completed, is_deleted } = req.body
-      const updatedTodo = new Todo({ todo_id, title, updated_by: username, due_date, is_completed, is_deleted })
+      const { title, due_date, is_completed } = req.body
+      const updatedTodo = new Todo({ todo_id, title, updated_by: username, due_date, is_completed })
       const todo = await db.updateTodo(todo_id, updatedTodo)
       res.status(200).json(todo)
     }

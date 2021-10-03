@@ -1,5 +1,6 @@
 const express = require('express')
 const logger = require('morgan')
+const apiErrorHandler = require('./errors/api-error-handler');
 
 module.exports = (router) => {
   const app = express()
@@ -8,5 +9,6 @@ module.exports = (router) => {
   app.use(logger('common'))
   app.use(express.static('public'))
   app.use(router)
+  app.use(apiErrorHandler);
   return app
 }

@@ -54,8 +54,8 @@ module.exports = (pool, Task) => {
 
   db.updateTask = async (task_id, task) => {
     const res = await pool.query(
-      'UPDATE Tasks SET title=$2, description=$3, updated_by=$4, due_date=$5, is_completed=$6, is_deleted=$7 WHERE task_id=$1 RETURNING *',
-      [task_id, task.title, task.description, task.updated_by, task.due_date, task.is_completed, task.is_deleted]
+      'UPDATE Tasks SET title=$2, description=$3, updated_by=$4, due_date=$5, is_completed=$6 WHERE task_id=$1 RETURNING *',
+      [task_id, task.title, task.description, task.updated_by, task.due_date, task.is_completed]
     )
     return new Task(res.rows[0])
   }

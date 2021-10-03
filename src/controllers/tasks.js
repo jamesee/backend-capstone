@@ -57,7 +57,7 @@ module.exports = (db, Task) => {
   controllers.updateTask = async (req, res, next) => {
     const { uid, username } = req
     const task_id = Number(req.params.task_id)
-    const { title, description, due_date, is_completed, is_deleted } = req.body
+    const { title, description, due_date, is_completed} = req.body
 
     if (!isInteger(task_id)) {
       res.status(400).json({ error: `Please provide a valid task_id` })
@@ -75,7 +75,7 @@ module.exports = (db, Task) => {
     if (authorised === null || authorised.role === 'read-only') {
       res.status(403).json({ error: `User not authorised to update task_id ${task_id}` })
     } else {
-      const updatedTask = new Task({ todo_id, title, description, 'updated_by': username, due_date, is_completed, is_deleted })
+      const updatedTask = new Task({ todo_id, title, description, 'updated_by': username, due_date, is_completed})
       const task = await db.updateTask(task_id, updatedTask)
       res.status(200).json(task)
     }

@@ -2,7 +2,10 @@ const express = require('express')
 const swaggerUi = require('swagger-ui-express')
 const swaggerJsdoc = require('swagger-jsdoc')
 
-module.exports = (authMiddleware, controllers) => {
+const workingValidateDto = require('../middlewares/validate-dto');
+
+
+module.exports = (authMiddleware, validateDto, controllers) => {
   const router = express.Router()
 
   /**
@@ -20,7 +23,7 @@ module.exports = (authMiddleware, controllers) => {
 
 
   // Auth
-  router.use('/', require('./auth')(controllers))
+  router.use('/', require('./auth')(controllers, validateDto))
 
   // Swagger Docs
   const options = {
