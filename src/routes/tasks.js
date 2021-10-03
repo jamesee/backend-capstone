@@ -2,7 +2,6 @@ const express = require('express');
 
 module.exports = (controllers, validateDto) => {
   const router = express.Router()
-  function isInteger(n) { return /^\+?(0|[1-9]\d*)$/.test(n); }
 
   /**
    * @openapi
