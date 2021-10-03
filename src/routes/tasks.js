@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = (controllers) => {
+module.exports = (controllers, validateDto) => {
   const router = express.Router()
   function isInteger(n) { return /^\+?(0|[1-9]\d*)$/.test(n); }
 
@@ -121,7 +121,7 @@ module.exports = (controllers) => {
  *            schema:
  *              $ref: '#/components/schemas/Error'
  */
-  router.put('/:task_id', controllers.updateTask)
+  router.put('/:task_id', validateDto.updateTask, controllers.updateTask)
 
   /**
    * @openapi

@@ -1,6 +1,5 @@
 const yup = require("yup");
 
-// const { title, due_date, is_completed, is_deleted } = req.body
 
 const createTodo = yup.object().shape({
   title: yup.string().trim().required("Title is required"),

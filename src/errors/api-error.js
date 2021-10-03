@@ -8,16 +8,20 @@ class ApiError {
     return new ApiError(400, msg);
   }
 
+  static unauthorized(msg){
+    return new ApiError(401, msg);
+  }
+
   static accessControlNotFound(msg) {
     return new ApiError(403, msg);
   }
 
-  static internalServerError(msg){
-    return new ApiError(500, msg);
-  }
-
   static notFound(msg){
     return new ApiError(404, msg);
+  }
+
+  static internalServerError(msg){
+    return new ApiError(500, msg);
   }
 
 }

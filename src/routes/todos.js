@@ -227,7 +227,7 @@ module.exports = (controllers, validateDto) => {
    *            schema:
    *              $ref: '#/components/schemas/Task'
    */
-  router.post('/:todo_id/tasks', controllers.createTask)
+  router.post('/:todo_id/tasks', validateDto.createTask, controllers.createTask)
 
   /**
    * @openapi

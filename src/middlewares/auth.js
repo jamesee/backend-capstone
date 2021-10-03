@@ -1,4 +1,4 @@
-module.exports = (service) => {
+module.exports = (service, ApiError) => {
   return (req, res, next) => {
     const authHeader = req.headers.authorization
     const token = authHeader && authHeader.split(' ')[1]
@@ -10,6 +10,8 @@ module.exports = (service) => {
         return next()
       }
     }
-    res.status(401).send('Unauthorized')
+    
+    return next(ApiError.unauthorized({error: "Unauthorized"}))
+
   }
 }

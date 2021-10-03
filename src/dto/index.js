@@ -1,6 +1,7 @@
-const db = {
+const schema = {
   ...require("./auth-schema"),
   ...require("./todo-schema"),
+  ...require("./task-schema"),
 };
 
-module.exports = db;
+module.exports = schema;

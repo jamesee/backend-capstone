@@ -11,5 +11,8 @@ module.exports = (schema) => {
   validations.updateTodo = ValidateDto(schema.updateTodo, ApiError);
   validations.shareTodo = ValidateDto(schema.shareTodo, ApiError);
 
+  validations.createTask = ValidateDto(schema.createTask, ApiError);
+  validations.updateTask = ValidateDto(schema.updateTask, ApiError);
+
   return validations;
 };

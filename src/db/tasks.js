@@ -5,7 +5,7 @@ module.exports = (pool, Task) => {
   db.insertTask = async (task) => {
     const res = await pool.query(
       'INSERT INTO Tasks (todo_id, title, description, updated_by, due_date, is_completed, is_deleted) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *',
-      [task.todo_id, task.title, task.description, task.updated_by, task.due_date, task.is_completed, task.is_deleted]
+      [task.todo_id, task.title, task.description, task.updated_by, task.due_date, task.is_completed, false]
     )
     return new Task(res.rows[0])
   }
