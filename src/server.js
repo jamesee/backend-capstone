@@ -5,26 +5,20 @@ const AuthMiddleware = require('./middlewares/auth')
 const AuthService = require('./services/auth')
 const AmqpService = require('./services/amqp')
 const Controllers = require('./controllers')
+const Validations = require('./validations')
+
 const db = require('./db')
-const ValidateDto = require('./middlewares/validate-dto');
-const authSchema = require('./dto/auth-schema')
-// const schema = require('./dto')
-
-const validateDto = (schema)=>{
-  service = {}
-
-  service.register = ValidateDto(schema.register)
-  service.login = ValidateDto(schema.login)
-
-  return service
-}
+const schema = require('./dto')
+const ApiError = require('./errors/api-error')
 
 const amqpService = AmqpService()
-const authService = AuthService(db)
+const authService = AuthService(db, ApiError)
 const authMiddleware = AuthMiddleware(authService)
 const controllers = Controllers(db, authService, amqpService)
-const router = Router(authMiddleware, validateDto(authSchema), controllers)
+const validateDto = Validations(schema)
+const router = Router(authMiddleware, validateDto, controllers)
 const app = App(router)
+
 
 const PORT = process.env.PORT || 3000
 

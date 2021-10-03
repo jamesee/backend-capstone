@@ -6,7 +6,7 @@ const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS)
 const JWT_SECRET = process.env.JWT_SECRET
 const JWT_EXPIRY = parseInt(process.env.JWT_EXPIRY)
 
-module.exports = (db) => {
+module.exports = (db, ApiError) => {
   const service = {}
 
   service.generateToken = (uid, username) => {
@@ -14,7 +14,13 @@ module.exports = (db) => {
   }
 
   service.registerUser = async (username, email, password) => {
-    const user = await db.findUserByEmail(email)
+    let user = null;
+    try {
+      user = await db.findUserByEmail(email)
+    } catch (error){
+      ApiError.internalServerError({error})
+    }
+
     if (user) {
       return null
     } else {
@@ -26,7 +32,13 @@ module.exports = (db) => {
   }
 
   service.loginUser = async (email, password) => {
-    const user = await db.findUserByEmail(email)
+    let user = null;
+    try {
+      user = await db.findUserByEmail(email)
+    } catch (error){
+      ApiError.internalServerError({error})
+    }
+    
     if (user) {
       const isValid = await bcrypt.compare(password, user.password_hash)
       if (isValid) {

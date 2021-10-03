@@ -1,6 +1,6 @@
 const express = require('express')
 
-module.exports = ( controllers) => {
+module.exports = (controllers, validateDto) => {
   const router = express.Router()
   /**
    * @openapi
@@ -78,7 +78,7 @@ module.exports = ( controllers) => {
    *            schema:
    *              $ref: '#/components/schemas/Todo'
    */
-  router.post('/', controllers.createTodos)
+  router.post('/', validateDto.createTodo, controllers.createTodos)
 
   /**
    * @openapi
@@ -169,7 +169,7 @@ module.exports = ( controllers) => {
    *            schema:
    *              $ref: '#/components/schemas/Error'
    */
-  router.put('/:todo_id', controllers.updateTodo)
+  router.put('/:todo_id',  validateDto.updateTodo, controllers.updateTodo)
 
   /**
    * @openapi
@@ -256,7 +256,7 @@ module.exports = ( controllers) => {
    *            schema:
    *              $ref: '#/components/schemas/PublishEmail'
    */
-  router.post('/:todo_id/share', controllers.shareTodo)
+  router.post('/:todo_id/share', validateDto.shareTodo, controllers.shareTodo)
 
 
   return router

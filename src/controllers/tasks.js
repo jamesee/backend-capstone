@@ -1,5 +1,5 @@
 
-module.exports = (db, Task) => {
+module.exports = (db, Task, ApiError) => {
 
   const controllers = {}
 
@@ -19,12 +19,12 @@ module.exports = (db, Task) => {
     // console.log(req.body)
     //check whether uid has access to todo_id to create task
     const authorised = await db.findAccessControlByTodoidUid(todo_id, uid)
-    console.log(authorised)
+    // console.log(authorised)
     if (authorised === null || authorised.role === 'read-only') {
       res.status(403).json({ error: `User not authorised to create task in todo_id ${todo_id}` })
     } else {
       const newTask = new Task({ todo_id, title, description, updated_by: username, due_date, is_completed, is_deleted })
-      console.log(newTask)
+      // console.log(newTask)
       const task = await db.insertTask(newTask)
       res.status(201).json(task)
     }

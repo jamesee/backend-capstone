@@ -1,6 +1,5 @@
-const ApiError = require('../errors/api-error');
 
-module.exports = (schema) => {
+module.exports = (schema, ApiError) => {
   return async (req, res, next) => {
     try {
       const validatedBody = await schema.validate(req.body);

@@ -42,7 +42,7 @@ module.exports = (authMiddleware, validateDto, controllers) => {
   router.use(authMiddleware)
 
   // router.use('/items', require('./items')(db))
-  router.use('/todos', require('./todos')(controllers))
+  router.use('/todos', require('./todos')(controllers, validateDto))
   router.use('/tasks', require('./tasks')(controllers))
 
 
