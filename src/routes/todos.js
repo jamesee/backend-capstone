@@ -133,7 +133,7 @@ module.exports = (controllers, validateDto) => {
    *            schema:
    *              $ref: '#/components/schemas/Error'
    */
-  router.get('/:todo_id', controllers.getTodo)
+  router.get('/:todo_id', validateDto.getTodo, controllers.getTodo)
 
 
   /**
@@ -198,7 +198,7 @@ module.exports = (controllers, validateDto) => {
    *            schema:
    *              $ref: '#/components/schemas/Error'
    */
-  router.delete('/:todo_id', controllers.deleteTodo)
+  router.delete('/:todo_id', validateDto.deleteTodo, controllers.deleteTodo)
 
   /**
    * @openapi

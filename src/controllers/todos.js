@@ -1,10 +1,6 @@
 module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
   const controllers = {};
 
-  function isInteger(n) {
-    return /^\+?(0|[1-9]\d*)$/.test(n);
-  }
-
   controllers.createTodos = async (req, res, next) => {
     const { uid, username } = req;
     const newTodo = new Todo({ ...req.body, updated_by: username });
@@ -36,11 +32,6 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
     const { uid } = req;
     const todo_id = Number(req.params.todo_id);
 
-    if (!isInteger(todo_id)) {
-      next(ApiError.badRequest({ error: `Please provide a valid todo_id` }));
-      return
-    }
-
     try {
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
 
@@ -70,11 +61,6 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
     const { uid, username } = req;
     const todo_id = Number(req.params.todo_id);
 
-    if (!isInteger(todo_id)) {
-      next(ApiError.badRequest({ error: `Please provide a valid todo_id` }));
-      return
-    }
-
     try {
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
       if (authorised === null || authorised.role === "read-only") {
@@ -102,11 +88,6 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
   controllers.deleteTodo = async (req, res, next) => {
     const { uid } = req;
     const todo_id = Number(req.params.todo_id);
-
-    if (!isInteger(todo_id)) {
-      next(ApiError.badRequest({ error: `Please provide a valid todo_id` }));
-      return
-    }
 
     try {
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
@@ -141,11 +122,6 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
     const { uid } = req;
     const todo_id = Number(req.params.todo_id);
     const { sharelist } = req.body;
-
-    if (!isInteger(todo_id)) {
-      next(ApiError.badRequest({ error: `Please provide a valid todo_id` }));
-      return
-    }
 
     try {
       const accessCheck = await db.findAccessControlByTodoidUid(todo_id, uid);

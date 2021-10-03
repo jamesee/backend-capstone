@@ -1,19 +1,10 @@
 module.exports = (db, Task, ApiError) => {
   const controllers = {};
 
-  function isInteger(n) {
-    return /^\+?(0|[1-9]\d*)$/.test(n);
-  }
-
   controllers.createTask = async (req, res, next) => {
     const { uid, username } = req;
     const { title, description, due_date, is_completed } = req.body;
     const todo_id = Number(req.params.todo_id);
-
-    if (!isInteger(todo_id)) {
-      next(ApiError.badRequest({ error: `Please provide a valid todo_id` }));
-      return;
-    }
 
     try {
       //check whether uid has access to todo_id to create task
@@ -56,11 +47,6 @@ module.exports = (db, Task, ApiError) => {
     const { uid } = req;
     const task_id = Number(req.params.task_id);
 
-    if (!isInteger(task_id)) {
-      next(ApiError.badRequest({ error: `Please provide a valid task_id` }));
-      return;
-    }
-
     try {
       const task = await db.findTaskByTaskidUid(task_id, uid);
       if (task) {
@@ -71,7 +57,7 @@ module.exports = (db, Task, ApiError) => {
             error: `User not authorised to access task_id ${task_id}`,
           })
         );
-        return
+        return;
       }
     } catch (error) {
       next(ApiError.internalServerError({ error }));
@@ -83,20 +69,15 @@ module.exports = (db, Task, ApiError) => {
     const task_id = Number(req.params.task_id);
     const { title, description, due_date, is_completed } = req.body;
 
-    if (!isInteger(task_id)) {
-      next(ApiError.badRequest({ error: `Please provide a valid task_id` }));
-      return;
-    }
-
     try {
-      const task = await db.findTaskById(task_id,uid);
+      const task = await db.findTaskById(task_id, uid);
       if (!task) {
         next(
           ApiError.notFound({
             error: `Task_id ${task_id} not found.`,
           })
         );
-        return
+        return;
       }
 
       const { todo_id } = task;
@@ -107,7 +88,7 @@ module.exports = (db, Task, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id} (task_id ${task_id})`,
           })
         );
-        return
+        return;
       } else {
         const updatedTask = new Task({
           todo_id,
@@ -129,11 +110,6 @@ module.exports = (db, Task, ApiError) => {
     const { uid } = req;
     const task_id = Number(req.params.task_id);
 
-    if (!isInteger(task_id)) {
-      next(ApiError.badRequest({ error: `Please provide a valid task_id` }));
-      return;
-    }
-
     const task = await db.findTaskById(task_id);
     if (task == null) {
       next(
@@ -141,7 +117,7 @@ module.exports = (db, Task, ApiError) => {
           error: `Task_id ${task_id} not found.`,
         })
       );
-      return
+      return;
     } else {
       const { todo_id } = task;
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
@@ -151,7 +127,7 @@ module.exports = (db, Task, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id} (task_id ${task_id})`,
           })
         );
-        return
+        return;
       } else {
         const todo = await db.deleteTask(task_id);
         res.status(200).json(todo);

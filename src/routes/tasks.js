@@ -86,7 +86,7 @@ module.exports = (controllers, validateDto) => {
    *            schema:
    *              $ref: '#/components/schemas/Error'
    */
-  router.get('/:task_id', controllers.getTask)
+  router.get('/:task_id', validateDto.getTask, controllers.getTask)
 
   /**
  * @openapi
@@ -150,7 +150,7 @@ module.exports = (controllers, validateDto) => {
    *            schema:
    *              $ref: '#/components/schemas/Error'
    */
-  router.delete('/:task_id', controllers.deleteTask)
+  router.delete('/:task_id', validateDto.deleteTask, controllers.deleteTask)
 
   return router
 }
