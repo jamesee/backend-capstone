@@ -8,7 +8,7 @@ const Controllers = require('./controllers')
 const db = require('./db')
 const ValidateDto = require('./middlewares/validate-dto');
 const authSchema = require('./dto/auth-schema')
-
+// const schema = require('./dto')
 
 const validateDto = (schema)=>{
   service = {}
