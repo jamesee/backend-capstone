@@ -13,7 +13,6 @@ module.exports = (controllers, validateDto) => {
    *        - update_by
    *        - due_date
    *        - is_completed
-   *        - is_deleted
    *      properties:
    *        title:
    *          type: string   
@@ -24,8 +23,6 @@ module.exports = (controllers, validateDto) => {
    *          format: date
    *        is_completed:
    *          type: boolean  
-   *        is_deleted:
-   *          type: boolean
    */
 
   /**
