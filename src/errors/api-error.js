@@ -12,7 +12,7 @@ class ApiError {
     return new ApiError(401, msg);
   }
 
-  static accessControlNotFound(msg) {
+  static forbidden(msg) {
     return new ApiError(403, msg);
   }
 

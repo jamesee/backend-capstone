@@ -11,7 +11,7 @@ module.exports = (db, Task, ApiError) => {
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
       if (authorised === null || authorised.role === "read-only") {
         next(
-          ApiError.accessControlNotFound({
+          ApiError.forbidden({
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
@@ -53,7 +53,7 @@ module.exports = (db, Task, ApiError) => {
         res.status(200).json(task);
       } else {
         next(
-          ApiError.accessControlNotFound({
+          ApiError.forbidden({
             error: `User not authorised to access task_id ${task_id}`,
           })
         );
@@ -84,7 +84,7 @@ module.exports = (db, Task, ApiError) => {
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
       if (authorised === null || authorised.role === "read-only") {
         next(
-          ApiError.accessControlNotFound({
+          ApiError.forbidden({
             error: `User not authorised to access todo_id ${todo_id} (task_id ${task_id})`,
           })
         );
@@ -123,7 +123,7 @@ module.exports = (db, Task, ApiError) => {
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
       if (authorised === null || authorised.role === "read-only") {
         next(
-          ApiError.accessControlNotFound({
+          ApiError.forbidden({
             error: `User not authorised to access todo_id ${todo_id} (task_id ${task_id})`,
           })
         );

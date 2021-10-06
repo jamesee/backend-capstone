@@ -37,7 +37,7 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
 
       if (authorised === null) {
         next(
-          ApiError.accessControlNotFound({
+          ApiError.forbidden({
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
@@ -65,7 +65,7 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
       if (authorised === null || authorised.role === "read-only") {
         next(
-          ApiError.accessControlNotFound({
+          ApiError.forbidden({
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
@@ -93,7 +93,7 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
       if (authorised === null || authorised.role === "read-only") {
         next(
-          ApiError.accessControlNotFound({
+          ApiError.forbidden({
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
@@ -127,7 +127,7 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
       const accessCheck = await db.findAccessControlByTodoidUid(todo_id, uid);
       if (!accessCheck) {
         next(
-          ApiError.accessControlNotFound({
+          ApiError.forbidden({
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
