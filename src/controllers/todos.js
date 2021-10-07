@@ -41,7 +41,6 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
-        return
       } else {
         try {
           const todo = await db.findTodoByTodoidUid(todo_id, uid);
@@ -49,7 +48,6 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
           res.json({ ...todo, tasks });
         } catch (error) {
           next(ApiError.internalServerError({ error }));
-          return
         }
       }
     } catch (error) {
@@ -69,7 +67,6 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
-        return
       } else {
         const { title, due_date, is_completed } = req.body;
         const updatedTodo = new Todo({
@@ -97,7 +94,6 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
-        return
       } else {
         let ac = false;
         if (authorised.role === "creator") {
@@ -131,13 +127,12 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
-        return
+      } else {
+        sharelist.forEach(async (item) => {
+          await amqpService.publishEmail(item.email, item.role, todo_id);
+        });
+        res.status(202).json({ status: "accepted", sharelist });
       }
-
-      sharelist.forEach(async (item) => {
-        await amqpService.publishEmail(item.email, item.role, todo_id);
-      });
-      res.status(202).json({ status: "accepted", sharelist });
     } catch (error) {
       next(ApiError.internalServerError({ error }));
     }

@@ -141,8 +141,8 @@ describe("create 1xtodos and 2xtasks in db", () => {
   });
 });
 
-// ************************************************ PUT /todo/:todo_id
-describe("PUT /todos/:todo_id", () => {
+// ************************************************ PUT /tasks/:task_id
+describe("PUT /tasks/:task_id", () => {
   const todo = {
     title: "test_todo_1",
     due_date: "2021-10-18T16:00:00.000Z",
@@ -245,8 +245,8 @@ describe("PUT /todos/:todo_id", () => {
   });
 });
 
-// ************************************************ soft-DELETE /todo/:todo_id
-describe("DELETE /items", () => {
+// ************************************************ soft-DELETE /tasks/:task_id
+describe("DELETE /tasks/:task_id", () => {
   const todo = {
     title: "test_todo_1",
     due_date: "2021-10-18T16:00:00.000Z",
@@ -264,6 +264,7 @@ describe("DELETE /items", () => {
     await utils.setup();
     token = await utils.registerUser(username, email, password);
 
+    //*** create a todo for the purpose of creating a task */
     await request(app)
       .post("/todos")
       .set("Authorization", token)
@@ -273,6 +274,7 @@ describe("DELETE /items", () => {
         todo_id = response.body.todo_id;
       });
 
+    //*** create a task */
     await request(app)
       .post(`/todos/${todo_id}/tasks`)
       .set("Authorization", token)
@@ -283,9 +285,9 @@ describe("DELETE /items", () => {
       });
   });
 
-  describe("delete an item", () => {
+  describe("delete a task", () => {
 
-    it("should return 200 with is_deleted field = true", async () => {
+    it("should return 200 with both is_deleted and access_control_deleted fields = true", async () => {
       return request(app)
         .delete(`/tasks/${task_id}`)
         .set("Authorization", token)

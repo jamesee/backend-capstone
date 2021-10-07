@@ -15,7 +15,6 @@ module.exports = (db, Task, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id}`,
           })
         );
-        return;
       } else {
         const newTask = new Task({
           todo_id,
@@ -57,7 +56,6 @@ module.exports = (db, Task, ApiError) => {
             error: `User not authorised to access task_id ${task_id}`,
           })
         );
-        return;
       }
     } catch (error) {
       next(ApiError.internalServerError({ error }));
@@ -77,7 +75,7 @@ module.exports = (db, Task, ApiError) => {
             error: `Task_id ${task_id} not found.`,
           })
         );
-        return;
+        
       }
 
       const { todo_id } = task;
@@ -88,7 +86,7 @@ module.exports = (db, Task, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id} (task_id ${task_id})`,
           })
         );
-        return;
+        
       } else {
         const updatedTask = new Task({
           todo_id,
@@ -117,7 +115,7 @@ module.exports = (db, Task, ApiError) => {
           error: `Task_id ${task_id} not found.`,
         })
       );
-      return;
+      
     } else {
       const { todo_id } = task;
       const authorised = await db.findAccessControlByTodoidUid(todo_id, uid);
@@ -127,7 +125,7 @@ module.exports = (db, Task, ApiError) => {
             error: `User not authorised to access todo_id ${todo_id} (task_id ${task_id})`,
           })
         );
-        return;
+        
       } else {
         const todo = await db.deleteTask(task_id);
         res.status(200).json(todo);
