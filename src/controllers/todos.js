@@ -70,7 +70,9 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
       } else {
         const { title, due_date, is_completed } = req.body;
         const updatedTodo = new Todo({
-          ...req.body,
+          title,
+          due_date,
+          is_completed,
           todo_id,
           updated_by: username,
         });

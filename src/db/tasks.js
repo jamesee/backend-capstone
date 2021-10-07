@@ -37,15 +37,15 @@ module.exports = (pool, Task) => {
 
   db.findTaskById = async (task_id) => {
     const res = await pool.query(
-      'SELECT * FROM Tasks WHERE task_id = $1',
-      [task_id]
+      'SELECT * FROM Tasks WHERE task_id = $1 AND is_deleted=$2',
+      [task_id, false]
     )
     return res.rowCount ? new Task(res.rows[0]) : null
   }
 
   db.findTaskByTaskidUid = async (task_id, uid) => {
     const res = await pool.query(
-      'SELECT * FROM Tasks tk INNER JOIN Access_controls ac ON tk.todo_id=ac.todo_id WHERE tk.task_id = $1 AND ac.user_id=$2 and tk.is_deleted=$3',
+      'SELECT * FROM Tasks tk INNER JOIN Access_controls ac ON tk.todo_id=ac.todo_id WHERE tk.task_id = $1 AND ac.user_id=$2 AND tk.is_deleted=$3',
       [task_id, uid, false]
     )
     return res.rowCount ? new Task(res.rows[0]) : null
