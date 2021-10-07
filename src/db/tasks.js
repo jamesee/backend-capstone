@@ -29,8 +29,8 @@ module.exports = (pool, Task) => {
   db.findTasksByUid = async (uid) => {
     const res = await pool.query(
       // 'SELECT * FROM Tasks tk INNER JOIN Todos td on tk.todo_id=td.todo_id INNER JOIN Access_controls ac ON tk.todo_id = ac.todo_id WHERE ac.user_id=$1',
-      'SELECT * FROM Tasks tk INNER JOIN Access_controls ac ON tk.todo_id = ac.todo_id WHERE ac.user_id=$1',
-      [uid]
+      'SELECT * FROM Tasks tk INNER JOIN Access_controls ac ON tk.todo_id = ac.todo_id WHERE ac.user_id=$1 AND tk.is_deleted=$2',
+      [uid, false]
     )
     return res.rows.map(row => new Task(row))
   }
@@ -45,8 +45,8 @@ module.exports = (pool, Task) => {
 
   db.findTaskByTaskidUid = async (task_id, uid) => {
     const res = await pool.query(
-      'SELECT * FROM Tasks tk INNER JOIN Access_controls ac ON tk.todo_id=ac.todo_id WHERE tk.task_id = $1 AND ac.user_id=$2',
-      [task_id, uid]
+      'SELECT * FROM Tasks tk INNER JOIN Access_controls ac ON tk.todo_id=ac.todo_id WHERE tk.task_id = $1 AND ac.user_id=$2 and tk.is_deleted=$3',
+      [task_id, uid, false]
     )
     return res.rowCount ? new Task(res.rows[0]) : null
   }

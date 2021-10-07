@@ -293,8 +293,8 @@ describe("DELETE /tasks/:task_id", () => {
         .set("Authorization", token)
         .expect(200)
         .then((response) => {
-          expect(response.body).toHaveProperty('access_control_deleted', true)
-          expect(response.body.task).toHaveProperty('is_deleted', true)
+          // console.debug(response.body)
+          expect(response.body).toHaveProperty('is_deleted', true)
         });
     });
 
