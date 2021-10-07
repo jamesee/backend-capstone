@@ -111,7 +111,7 @@ module.exports = (db, amqpService, AccessControl, Todo, ApiError) => {
         const todo = await db.deleteTodo(todo_id);
         todo
           ? res.status(200).json({ access_control_deleted: ac, todo })
-          : ApiError.notFound({ error: `Todo_id ${todo_id} not found` });
+          : next(ApiError.notFound({ error: `Todo_id ${todo_id} not found` }));
       }
     } catch (error) {
       next(ApiError.internalServerError({ error }));

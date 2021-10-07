@@ -118,17 +118,17 @@ db.initialise = async () => {
 
   db.clearTodosTables = async () => {
     await pool.query('DELETE FROM Todos')
-    await pool.query('ALTER SEQUENCE todos_id_seq RESTART')
+    await pool.query('ALTER SEQUENCE todos_todo_id_seq RESTART')
   }
 
   db.clearAccessControlsTables = async () => {
     await pool.query('DELETE FROM Access_controls')
-    await pool.query('ALTER SEQUENCE access_id_seq RESTART')
+    await pool.query('ALTER SEQUENCE access_controls_access_id_seq RESTART')
   }
 
   db.clearTasksTables = async () => {
     await pool.query('DELETE FROM Tasks')
-    await pool.query('ALTER SEQUENCE task_id_seq RESTART')
+    await pool.query('ALTER SEQUENCE tasks_task_id_seq RESTART')
   }
 
   db.end = async () => {

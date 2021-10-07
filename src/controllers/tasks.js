@@ -106,7 +106,7 @@ module.exports = (db, Task, ApiError) => {
     }
   };
 
-  controllers.deleteTask = async (req, res, next) => {
+  controllers.deleteTaskBak = async (req, res, next) => {
     const { uid } = req;
     const task_id = Number(req.params.task_id);
 
@@ -132,6 +132,43 @@ module.exports = (db, Task, ApiError) => {
         const todo = await db.deleteTask(task_id);
         res.status(200).json(todo);
       }
+    }
+  };
+
+  controllers.deleteTask = async (req, res, next) => {
+    const { uid } = req;
+    const task_id = Number(req.params.task_id);
+
+
+    try {
+      const task = await db.findTaskById(task_id);
+      if (!task){
+        next(ApiError.notFound(`Task_id ${task_id} not found.`))
+      }
+      const authorised = await db.findAccessControlByTodoidUid(task.todo_id, uid);
+      if (authorised === null || authorised.role === "read-only") {
+        next(
+          ApiError.forbidden({
+            error: `User not authorised to access todo_id ${todo_id}`,
+          })
+        );
+      } else {
+        let ac = false;
+        if (authorised.role === "creator") {
+          ac = await db.deleteAccessControlByTodoid(authorised.todo_id);
+        }
+
+        if (authorised.role === "collaborator") {
+          ac = await db.deleteAccessControl(authorised.access_id);
+        }
+
+        const task = await db.deleteTask(task_id);
+        task
+          ? res.status(200).json({ access_control_deleted: ac, task })
+          : next(ApiError.notFound({ error: `Todo_id ${task_id} not found` }));
+      }
+    } catch (error) {
+      next(ApiError.internalServerError({ error }));
     }
   };
 

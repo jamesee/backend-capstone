@@ -26,8 +26,10 @@ utils.db = db
 
 utils.setup = async () => {
   await db.initialise()
-  // await db.clearItemsTables()
   await db.clearUsersTables()
+  await db.clearTodosTables()
+  await db.clearTasksTables()
+  await db.clearAccessControlsTables()
 }
 
 utils.teardown = async () => {
@@ -37,6 +39,13 @@ utils.teardown = async () => {
 utils.registerUser = async (username = 'test_user', email = 'test@gmail.com',password = 'test_password') => {
   const token = await authService.registerUser(username, email, password)
   return `Bearer ${token}`
+}
+
+utils.setupTodoforTaskTesting = async (todo) => {
+
+  const res = await db.insertTodo(todo)
+  const todo_id = res.todo_id
+  return todo_id
 }
 
 module.exports = utils

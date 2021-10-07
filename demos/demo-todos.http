@@ -25,6 +25,8 @@ content-type: application/json
 
 ###
 
+
+    
 @jwtToken = {{login.response.body.token}}
 
 # @name createTodo
@@ -33,8 +35,9 @@ Content-Type: application/json
 Authorization: token {{jwtToken}}
 
 {
-    "title": "title - james1",
-    "is_complete": false
+      "title": "test_todo_1",
+      "due_date": "2021-10-18T16:00:00.000Z",
+      "is_completed": false
 }
 
 
