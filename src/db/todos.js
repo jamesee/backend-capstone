@@ -20,7 +20,7 @@ module.exports = (pool, Todo) => {
 
   db.findAllTodosByUid = async (uid) => {
     const res = await pool.query(
-      'SELECT * FROM Todos td INNER JOIN Access_controls ac ON td.todo_id = ac.todo_id where ac.user_id=$1 and tk.is_deleted=$2',
+      'SELECT * FROM Todos td INNER JOIN Access_controls ac ON td.todo_id = ac.todo_id where ac.user_id=$1 and td.is_deleted=$2',
       [uid, false]
     )
     return res.rows.map(row => new Todo(row))
@@ -29,7 +29,7 @@ module.exports = (pool, Todo) => {
 
   db.findTodoByTodoidUid = async (todo_id, uid) => {
     const res = await pool.query(
-      'SELECT * FROM Todos td INNER JOIN Access_controls ac ON td.todo_id = ac.todo_id WHERE ac.todo_id = $1 AND ac.user_id=$2 AND tk.is_deleted=$3',
+      'SELECT * FROM Todos td INNER JOIN Access_controls ac ON td.todo_id = ac.todo_id WHERE ac.todo_id = $1 AND ac.user_id=$2 AND td.is_deleted=$3',
       [todo_id, uid, false]
     )
     return res.rowCount ? new Todo(res.rows[0]) : null

@@ -13,6 +13,7 @@ let token;
 beforeAll(async () => {
   await utils.setup();
   token = await utils.registerUser(username, email, password);
+  console.debug(token)
 });
 
 afterAll(async () => {
@@ -224,6 +225,5 @@ describe("DELETE /items", () => {
         .set("Authorization", token)
         .expect(403);
     });
-
   });
 });

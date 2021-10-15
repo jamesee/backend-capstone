@@ -1,38 +1,45 @@
-require('dotenv').config()
+require('dotenv').config({ path: '../.env.test'})
 const bcrypt = require('bcrypt')
+const ApiError = require('../errors/api-error')
 const AuthService = require('./auth')
 
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS)
 const username = 'test_user'
+const email = 'test@gmail.com'
 const password = 'test_password'
 
 const db = {
-  findUserByUsername: jest.fn(async () => {
+  findUserByEmail: jest.fn(async () => {
     return {
       id: 1,
       username: username,
+      email: email,
       password_hash: await bcrypt.hash(password, SALT_ROUNDS)
     }
   }),
   insertUser: jest.fn(() => {
-    return { id: 1 }
+    return { 
+      id: 1,
+      username: username,
+      email: email
+    }
   })
 }
 
-const authService = AuthService(db)
+const authService = AuthService(db, ApiError)
 
 describe('Register user', () => {
   describe('given a new username and password', () => {
     it('should return a token', async () => {
-      db.findUserByUsername.mockResolvedValueOnce(null)
-      const token = await authService.registerUser(username, password)
+      db.findUserByEmail.mockResolvedValueOnce(null)
+      const token = await authService.registerUser(username, email, password)
       expect(token).toBeTruthy()
     })
   })
 
   describe('given an existing username', () => {
     it('should return null', async () => {
-      const token = await authService.registerUser(username, password)
+      const token = await authService.registerUser(username, email, password)
       expect(token).toBeFalsy()
     })
   })
@@ -41,14 +48,14 @@ describe('Register user', () => {
 describe('Login user', () => {
   describe('given a valid username and password', () => {
     it('should return a token', async () => {
-      const token = await authService.loginUser(username, password)
+      const token = await authService.loginUser(email, password)
       expect(token).toBeTruthy()
     })
   })
 
   describe('given an invalid password', () => {
     it('should return null', async () => {
-      const token = await authService.loginUser(username, 'wrong_password')
+      const token = await authService.loginUser(email, 'wrong_password')
       expect(token).toBeFalsy()
     })
   })

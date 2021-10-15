@@ -1,0 +1,51 @@
+const { getMockReq, getMockRes } = require('@jest-mock/express')
+const Validations = require('./validate-dto')
+const ApiError = require("../errors/api-error")
+
+const schema = {
+  validate: jest.fn()
+}
+
+const validateDto = Validations(schema, ApiError)
+
+describe('Validations middleware', () => {
+  describe('schema validate fails', () => {
+    it('should return 400', async () => {
+      schema.validate.mockReturnValue(new Error("Bad Request"))
+      const req = getMockReq()
+      const { res, next } = getMockRes()
+      validateDto(req, res, next)
+      expect(next).toBeCalledTimes(1)
+    expect(jest.fn()).toHaveBeenCalledWith(ApiError.badRequest("Bad Request"))
+    //   expect(next).toHaveBeenCalledWith(ApiError.badRequest("Bad Request"))
+    })
+  })
+
+  describe('given a request with a token', () => {
+    let req
+    beforeEach(() => {
+      req = getMockReq({
+        headers: {
+          authorization: 'Bearer some_token'
+        }
+      })
+    })
+
+    it('should call next if token is valid', async () => {
+      service.verifyToken.mockReturnValue(1)
+      const { res, next } = getMockRes()
+      authMiddleware(req, res, next)
+      expect(next).toBeCalledTimes(1)
+      expect(next).not.toBeCalledWith(ApiError.unauthorized({error: "Unauthorized"}))
+    })
+
+    it('should return 401 if token is not valid', async () => {
+      service.verifyToken.mockReturnValue(null)
+      const { res, next } = getMockRes()
+      authMiddleware(req, res, next)
+      expect(next).toBeCalledTimes(1)
+      expect(next).toBeCalledWith(ApiError.unauthorized({error: "Unauthorized"}))
+    })
+  })
+})
+
