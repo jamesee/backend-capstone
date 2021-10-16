@@ -98,7 +98,7 @@ describe("create 1xtodos and 2xtasks in db", () => {
           .then((response) => {
             expect(response.body).toMatchObject(
               expect.objectContaining({
-                ...task,
+         
                 updated_by: username,
                 is_deleted: false,
                 todo_id: todo_id,
@@ -213,12 +213,9 @@ describe("PUT /tasks/:task_id", () => {
         .send(updatedTask)
         .expect(200)
         .then((response) => {
-          const { title, description, is_completed} =updatedTask;
           expect(response.body).toMatchObject(
             expect.objectContaining({
-              title,
-              description,
-              is_completed,
+              ...updatedTask,
               task_id: 1,
               todo_id,
               updated_by: username,
@@ -252,14 +249,14 @@ describe("PUT /tasks/:task_id", () => {
 describe("DELETE /tasks/:task_id", () => {
   const todo = {
     title: "test_todo_1",
-    //due_date: "2021-10-18T16:00:00.000Z",
+    due_date: "2021-10-18T16:00:00.000Z",
     is_completed: false,
   };
 
   const task = {
     title: "test_task_1",
     description: "test_task_1 description",
-    //due_date: "2021-10-18T16:00:00.000Z",
+    due_date: "2021-10-18T16:00:00.000Z",
     is_completed: false,
   };
 
