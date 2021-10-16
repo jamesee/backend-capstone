@@ -37,6 +37,7 @@ db.initialise = async () => {
   // delete all tables
   // for development purpose
   await pool.query(`
+      SET timezone='Asia/Singapore';
       DROP TABLE IF EXISTS access_controls;
       DROP TABLE IF EXISTS tasks;
       DROP TABLE IF EXISTS todos;
