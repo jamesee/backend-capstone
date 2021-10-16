@@ -69,15 +69,15 @@ describe("GET /todos", () => {
         .set("Authorization", token)
         .expect(200)
         .then((response) => {
-          // expect(response.body).toEqual(
-          expect(response.body).toMatchObject(
+          expect(response.body).toEqual(
             expect.arrayContaining(
-              todos.map((todo) => {
+              todos.map((todo,index) => {
                 return expect.objectContaining({
                   title: todo.title,
                   due_date: todo.due_date,
                   is_completed: todo.is_completed,
                   is_deleted: false,
+                  todo_id: index+1,
                   updated_by: username,
                 });
               })
