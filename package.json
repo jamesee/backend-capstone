@@ -9,7 +9,8 @@
     "db:migrate": "node scripts/migrate.js",
     "dev:worker": "nodemon src/worker.js",
     "worker": "node src/worker.js",
-    "test": "jest --runInBand --coverage --watchAll "
+    "dev:test": "jest --runInBand --coverage --watchAll ",
+    "test": "jest --runInBand --coverage",
   },
   "keywords": [],
   "author": "",
