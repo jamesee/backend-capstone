@@ -99,7 +99,7 @@ describe("POST /todos", () => {
     let todo_id;
     const todo = {
       title: "test_todo_1",
-      ////due_date: "2021-10-18T16:00:00.000Z",
+      due_date: "2021-10-18T16:00:00.000Z",
       is_completed: false,
     };
 
