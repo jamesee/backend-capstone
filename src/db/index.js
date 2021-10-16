@@ -37,7 +37,7 @@ db.initialise = async () => {
   // delete all tables
   // for development purpose
   await pool.query(`
-      ALTER DATABASE postgres SET timezone TO 'Asia/Singapore';
+      ALTER DATABASE postgres SET timezone TO 'UTC';
       DROP TABLE IF EXISTS access_controls;
       DROP TABLE IF EXISTS tasks;
       DROP TABLE IF EXISTS todos;
