@@ -74,7 +74,7 @@ describe("GET /todos", () => {
               todos.map((todo,index) => {
                 return expect.objectContaining({
                   title: todo.title,
-                  due_date: todo.due_date,
+                  // due_date: todo.due_date,
                   is_completed: todo.is_completed,
                   is_deleted: false,
                   todo_id: index+1,
