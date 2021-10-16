@@ -224,6 +224,5 @@ describe("DELETE /items", () => {
         .set("Authorization", token)
         .expect(403);
     });
-
   });
 });
