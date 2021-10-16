@@ -45,7 +45,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: npm ci
-      - run: npm run start
       - run: npm test
         env:
           DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/postgres'
@@ -54,7 +53,7 @@ jobs:
           JWT_EXPIRY: 900
           SALT_ROUNDS: 10
 
-  deploy: ## <-- this is the new stuff
+  deploy: 
     needs: build
     runs-on: ubuntu-latest
     steps:
