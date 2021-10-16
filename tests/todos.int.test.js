@@ -41,12 +41,12 @@ describe("GET /todos", () => {
     const todos = [
       {
         title: "test_todo_1",
-        due_date: new Date(Date.UTC(2021, 11, 1, 0, 0, 0)),
+        due_date: (new Date(Date.UTC(2021, 11, 1, 0, 0, 0))).toUTCString(),
         is_completed: false,
       },
       {
         title: "test_todo_2",
-        due_date: new Date(Date.UTC(2021, 12, 1, 0, 0, 0)),
+        due_date: (new Date(Date.UTC(2021, 12, 12, 0, 0, 0))).toUTCString(),
         is_completed: false,
       },
     ];
