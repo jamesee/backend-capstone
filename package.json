@@ -10,7 +10,7 @@
     "dev:worker": "nodemon src/worker.js",
     "worker": "node src/worker.js",
     "dev:test": "jest --runInBand --coverage --watchAll ",
-    "test": "jest --runInBand --coverage",
+    "test": "jest --runInBand --coverage"
   },
   "keywords": [],
   "author": "",
