@@ -69,7 +69,8 @@ describe("GET /todos", () => {
         .set("Authorization", token)
         .expect(200)
         .then((response) => {
-          expect(response.body).toEqual(
+          // expect(response.body).toEqual(
+          expect(response.body).toMatchObject(
             expect.arrayContaining(
               todos.map((todo) => {
                 return expect.objectContaining({
