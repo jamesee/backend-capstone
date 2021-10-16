@@ -41,12 +41,12 @@ describe("GET /todos", () => {
     const todos = [
       {
         title: "test_todo_1",
-        due_date: "2021-10-18T16:00:00.000Z",
+        due_date: new Date(Date.UTC(2021, 11, 1, 0, 0, 0)),
         is_completed: false,
       },
       {
         title: "test_todo_2",
-        due_date: "2021-10-18T16:00:00.000Z",
+        due_date: new Date(Date.UTC(2021, 12, 1, 0, 0, 0)),
         is_completed: false,
       },
     ];
@@ -74,7 +74,7 @@ describe("GET /todos", () => {
               todos.map((todo,index) => {
                 return expect.objectContaining({
                   title: todo.title,
-                  // due_date: todo.due_date,
+                  due_date: todo.due_date,
                   is_completed: todo.is_completed,
                   is_deleted: false,
                   todo_id: index+1,
