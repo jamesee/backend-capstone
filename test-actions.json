@@ -1,2 +1,30 @@
-test1
-test2
+Expected: ArrayContaining[ObjectContaining {
+    "due_date": 2021 - 12 - 01 T00: 00: 00.000 Z,
+    "is_completed": false,
+    "is_deleted": false,
+    "title": "test_todo_1",
+    "todo_id": 1,
+    "updated_by": "test_user"
+}, ObjectContaining {
+    "due_date": 2022 - 01 - 01 T00: 00: 00.000 Z,
+    "is_completed": false,
+    "is_deleted": false,
+    "title": "test_todo_2",
+    "todo_id": 2,
+    "updated_by": "test_user"
+}]
+Received: [{
+    "due_date": "2021-12-01T00:00:00.000Z",
+    "is_completed": false,
+    "is_deleted": false,
+    "title": "test_todo_1",
+    "todo_id": 1,
+    "updated_by": "test_user"
+}, {
+    "due_date": "2022-01-01T00:00:00.000Z",
+    "is_completed": false,
+    "is_deleted": false,
+    "title": "test_todo_2",
+    "todo_id": 2,
+    "updated_by": "test_user"
+}]
