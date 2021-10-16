@@ -45,6 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: npm ci
+      - run: npm run db:migrate
       - run: npm test
         env:
           DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/postgres'
