@@ -46,13 +46,13 @@ describe("create 1xtodos and 2xtasks in db", () => {
     {
       title: "test_task_1",
       description: "task1 description1",
-      due_date: "2021-10-18T16:00:00.000Z",
+      //due_date: "2021-10-18T16:00:00.000Z",
       is_completed: false,
     },
     {
       title: "test_task_2",
       description: "task2 description2",
-      due_date: "2021-10-18T16:00:00.000Z",
+      //due_date: "2021-10-18T16:00:00.000Z",
       is_completed: false,
     },
   ];
@@ -62,7 +62,7 @@ describe("create 1xtodos and 2xtasks in db", () => {
 
     const todo = {
       title: "test_todo_1",
-      due_date: "2021-10-18T16:00:00.000Z",
+      //due_date: "2021-10-18T16:00:00.000Z",
       is_completed: false,
     };
 
@@ -145,14 +145,14 @@ describe("create 1xtodos and 2xtasks in db", () => {
 describe("PUT /tasks/:task_id", () => {
   const todo = {
     title: "test_todo_1",
-    due_date: "2021-10-18T16:00:00.000Z",
+    //due_date: "2021-10-18T16:00:00.000Z",
     is_completed: false,
   };
 
   const task = {
     title: "test_task_1",
     description: "test_task_1 description",
-    due_date: "2021-10-18T16:00:00.000Z",
+    //due_date: "2021-10-18T16:00:00.000Z",
     is_completed: false,
   };
 
@@ -183,7 +183,7 @@ describe("PUT /tasks/:task_id", () => {
     const updatedTask = {
       title: "test_todo_1 updated",
       description: "test_task_1 description updated",
-      due_date: "2021-10-19T16:00:00.000Z",
+      //due_date: "2021-10-19T16:00:00.000Z",
       is_completed: true,
     };
 
@@ -249,14 +249,14 @@ describe("PUT /tasks/:task_id", () => {
 describe("DELETE /tasks/:task_id", () => {
   const todo = {
     title: "test_todo_1",
-    due_date: "2021-10-18T16:00:00.000Z",
+    //due_date: "2021-10-18T16:00:00.000Z",
     is_completed: false,
   };
 
   const task = {
     title: "test_task_1",
     description: "test_task_1 description",
-    due_date: "2021-10-18T16:00:00.000Z",
+    //due_date: "2021-10-18T16:00:00.000Z",
     is_completed: false,
   };
 
