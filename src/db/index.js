@@ -59,7 +59,7 @@ db.initialise = async () => {
         todo_id           SERIAL PRIMARY KEY,
         title             VARCHAR(128) NOT NULL,
         updated_by        VARCHAR(100) NOT NULL,
-        due_date          DATE NOT NULL,
+        due_date          TIMESTAMPTZ NOT NULL,
         is_completed      BOOLEAN NOT NULL,
         is_deleted        BOOLEAN NOT NULL,
         create_at         DATE NOT NULL DEFAULT CURRENT_DATE
@@ -73,7 +73,7 @@ db.initialise = async () => {
       title             VARCHAR(128) NOT NULL,
       description       VARCHAR(255) NOT NULL,
       updated_by        VARCHAR(100) NOT NULL,
-      due_date          DATE NOT NULL,
+      due_date          TIMESTAMPTZ NOT NULL,
       is_completed      BOOLEAN NOT NULL,
       is_deleted        BOOLEAN NOT NULL,
       create_at         DATE NOT NULL DEFAULT CURRENT_DATE,

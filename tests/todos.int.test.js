@@ -74,7 +74,7 @@ describe("GET /todos", () => {
               todos.map((todo, index) => {
                 return expect.objectContaining({
                   title: todo.title,
-                  // due_date: todo.due_date,
+                  due_date: todo.due_date,
                   is_completed: todo.is_completed,
                   is_deleted: false,
                   updated_by: username,
@@ -98,7 +98,7 @@ describe("POST /todos", () => {
     let todo_id;
     const todo = {
       title: "test_todo_1",
-      // due_date: "2021-10-18T16:00:00.000Z",
+      due_date: "2021-10-18T16:00:00.000Z",
       is_completed: false,
     };
 
@@ -140,7 +140,7 @@ describe("PUT /todos/:todo_id", () => {
     let todo_id;
     const todo = {
       title: "test_todo_1",
-      //due_date: "2021-10-18T16:00:00.000Z",
+      due_date: "2021-10-18T16:00:00.000Z",
       is_completed: false,
     };
 
@@ -197,7 +197,7 @@ describe("DELETE /items", () => {
     let todo_id;
     const todo = {
       title: "test_todo_1",
-      //due_date: "2021-10-18T16:00:00.000Z",
+      due_date: "2021-10-18T16:00:00.000Z",
       is_completed: false,
     };
 
