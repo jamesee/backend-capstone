@@ -12,12 +12,12 @@ module.exports = (db) => {
     if (user && todo) {
       // to check whether the user already has access-privilege
       const access = await db.findAccessControlByTodoidUid(todo_id, user.id)
+      const newAccessControl = new AccessControl({ todo_id: todo_id, user_id: user.id, role: role })
       if (access) {
-        console.log(`[INFO] User ${email} already has access-privilege to todo_id ${todo_id}. Abort registration ...`)
+        await db.updateAccessControl(access.access_id, newAccessControl)
+        console.log(`[INFO] User ${email} already has access-privilege to todo_id ${todo_id}. Update access_controls table ...`)
       } else {
         console.log(`[INFO] Registered user ${email} and valid todo_id ${todo_id}`)
-        const newAccessControl = new AccessControl({ todo_id: todo_id, user_id: user.id, role: role })
-        console.log(newAccessControl)
         await db.insertAccessControl(newAccessControl)
       }
     } else {
