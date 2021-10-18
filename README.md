@@ -75,12 +75,6 @@ CREATE TABLE IF NOT EXISTS Access_controls (
 │   └── minion.png
 ├── scripts
 │   └── migrate.js
-├── sql
-│   ├── activity5.json
-│   ├── backup-after-step10.pgsql
-│   ├── psql
-│   ├── psql-dump.sh
-│   └── resetdb.sql
 ├── src
 │   ├── app.js
 │   ├── controllers
@@ -106,8 +100,7 @@ CREATE TABLE IF NOT EXISTS Access_controls (
 │   ├── middlewares
 │   │   ├── auth.js
 │   │   ├── auth.test.js
-│   │   ├── validate-dto.js
-│   │   └── validate-dto.test.js.bak
+│   │   └── validate-dto.js
 │   ├── models
 │   │   ├── access-control.js
 │   │   ├── task.js
@@ -132,8 +125,6 @@ CREATE TABLE IF NOT EXISTS Access_controls (
     ├── tasks.int.test.js
     ├── todos.int.test.js
     └── utils.js
-
-15 directories, 54 files
 ```
 # Project Setup
 
