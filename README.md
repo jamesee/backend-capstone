@@ -488,7 +488,7 @@ Authorization: token {{jwtTokenJames1}}
 
 ### [Step 6] Share todo_id=1 with others using emails.
 
-P.S. james9@gmail.com is unregistered user.
+
 ```bash
 ### ***************** [15] james1 - share-todolist=1
 POST {{baseUrl}}/todos/{{todoId1}}/share HTTP/1.1
@@ -503,8 +503,8 @@ Authorization: token {{jwtTokenJames1}}
     ]
 }
 ```
+P.S. james9@gmail.com is unregistered user.
 
-P.S. james3@gmail.com is a repeated submission. The access_controls table will be updated with the latest submission.
 ```bash
 ### ***************** [16] james1 - share-todolist=1
 ### james3@gmail.com is a repeat submission
@@ -519,6 +519,7 @@ Authorization: token {{jwtTokenJames1}}
     ]
 }
 ```
+P.S. james3@gmail.com is a repeated submission. The access_controls table will be updated with the latest submission.
 
 ### [Step 7] Login as James2.
 ```bash
