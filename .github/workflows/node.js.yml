@@ -24,7 +24,7 @@ jobs:
         env:
           POSTGRES_PASSWORD: postgres
         # Set health checks to wait until postgres has started
-        options: >-
+        options: 
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
@@ -36,7 +36,7 @@ jobs:
           RABBITMQ_DEFAULT_PASS: test_password
         ports:
           - 5672:5672
-        options: >-
+        options:
           --health-cmd "rabbitmqctl node_health_check"
           --health-interval 10s
           --health-timeout 5s

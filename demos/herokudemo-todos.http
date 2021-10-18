@@ -18,14 +18,12 @@ POST {{baseUrl}}/login HTTP/1.1
 content-type: application/json
 
 {
-    "email": "test@gmail.com",
+    "email": "test1@gmail.com",
     "password": "test_password"
 }
 
 
 ###
-
-
     
 @jwtToken = {{login.response.body.token}}
 
@@ -75,5 +73,5 @@ Authorization: token {{jwtToken}}
 @firstReply = {{allTodos[0].todo_id}}
 
 # @name getFirstTodo
-GET {{baseUrl}}/todos/26 HTTP/1.1
+GET {{baseUrl}}/todos/2 HTTP/1.1
 Authorization: token {{jwtToken}}

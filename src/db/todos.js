@@ -12,8 +12,8 @@ module.exports = (pool, Todo) => {
   
   db.findTodoById = async (todo_id) => {
     const res = await pool.query(
-      'SELECT * FROM Todos where todo_id=$1',
-      [todo_id]
+      'SELECT * FROM Todos where todo_id=$1 AND is_deleted=$2',
+      [todo_id, false]
     )
     return res.rowCount ? new Todo(res.rows[0]) : null
   }

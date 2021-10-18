@@ -59,7 +59,7 @@ Authorization: token {{jwtToken}}
 
 {
     "title": "title - james1",
-    "due_date": "hello",
+    "due_date": "2021-12-15T08:00:00.000Z",
     "description": "description - james1",
     "is_complete": false
 }

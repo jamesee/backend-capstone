@@ -1,0 +1,249 @@
+
+# @baseUrl = https://backenddev-capstone.herokuapp.com
+@baseUrl = http://localhost:3000
+
+### *************************** register 5 users
+POST {{baseUrl}}/register HTTP/1.1
+content-type: application/json
+
+{
+    "username": "james1",
+    "email": "james1@gmail.com",
+    "password": "12345678"
+}
+
+###
+POST {{baseUrl}}/register HTTP/1.1
+content-type: application/json
+
+{
+    "username": "james2",
+    "email": "james2@gmail.com",
+    "password": "12345678"
+}
+
+###
+POST {{baseUrl}}/register HTTP/1.1
+content-type: application/json
+
+{
+    "username": "james3",
+    "email": "james3@gmail.com",
+    "password": "12345678"
+}
+
+###
+POST {{baseUrl}}/register HTTP/1.1
+content-type: application/json
+
+{
+    "username": "james4",
+    "email": "james4@gmail.com",
+    "password": "12345678"
+}
+
+###
+POST {{baseUrl}}/register HTTP/1.1
+content-type: application/json
+
+{
+    "username": "james5",
+    "email": "james5@gmail.com",
+    "password": "12345678"
+}
+
+### *************************** login james1
+ # @name loginJames1
+POST {{baseUrl}}/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "james1@gmail.com",
+    "password": "12345678"
+}
+
+### *************************** james1 - create 3 todos
+
+@jwtTokenJames1 = {{loginJames1.response.body.token}}
+
+# @name createTodo
+POST {{baseUrl}}/todos HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames1}}
+
+{
+      "title": "todo_1 - james1",
+      "due_date": "2021-10-19",
+      "is_completed": false
+}
+
+### ************* james1 - create 3 tasks under todo_id=1
+# @name createTask
+
+@todoId = 1
+
+POST {{baseUrl}}/todos/{{todoId}}/tasks HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames1}}
+
+{
+    "title": "Task Title - todo_id=1 , james1",
+    "due_date": "2021-12-15T08:00:00.000Z",
+    "description": "description - james1",
+    "is_complete": false
+}
+
+### ********************* james1 - getAllTodos
+# @name getAllTodos
+GET {{baseUrl}}/todos HTTP/1.1
+Authorization: token {{jwtTokenJames1}}
+
+### ********************* james1 - get todo_id=1 
+# @name getTodoById
+@todoId = 1
+GET {{baseUrl}}/todos/{{todoId}} HTTP/1.1
+Authorization: token {{jwtTokenJames1}}
+
+### ********************* james1 - share-todolist=1
+### james9@gmail.com is unregistered
+
+@todoId = 1
+POST {{baseUrl}}/todos/{{todoId}}/share HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames1}}
+
+{
+"sharelist": [
+    {"email":"james9@gmail.com", "role":"read-only"},
+    {"email":"james2@gmail.com", "role":"collaborator"},
+    {"email":"james3@gmail.com", "role":"read-only"}
+    ]
+}
+
+### ********************* james1 - share-todolist=1
+### james3@gmail.com is a repeat submission
+
+@todoId = 1
+POST {{baseUrl}}/todos/{{todoId}}/share HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames1}}
+
+{
+"sharelist": [
+    {"email": "james3@gmail.com", "role": "read-only"},
+    {"email": "james4@gmail.com", "role": "read-only"}
+    ]
+}
+### *************************** login james2
+ # @name loginJames2
+POST {{baseUrl}}/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "james2@gmail.com",
+    "password": "12345678"
+}
+
+### 
+@jwtTokenJames2 = {{loginJames2.response.body.token}}
+
+### ********************* james2 - getAllTodos
+# @name getAllTodos
+GET {{baseUrl}}/todos HTTP/1.1
+Authorization: token {{jwtTokenJames2}}
+
+### ********************* james2 - get todo_id=1 
+# @name getTodoById
+@todoId = 1
+GET {{baseUrl}}/todos/{{todoId}} HTTP/1.1
+Authorization: token {{jwtTokenJames2}}
+
+### ********************* james2 - Update todo_id=1 
+@todoId = 1
+PUT {{baseUrl}}/todos/{{todoId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames2}}
+
+{
+      "title": "todo_1 updated - james2",
+      "due_date": "2021-12-12",
+      "is_completed": true
+}
+
+### ********************* james2 - get todo_id=1 
+# @name getTodoById
+@todoId = 1
+GET {{baseUrl}}/todos/{{todoId}} HTTP/1.1
+Authorization: token {{jwtTokenJames2}}
+
+### ********************* james2 - Update task_id=1 
+PUT {{baseUrl}}/tasks/1 HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames2}}
+
+{
+    "title": "Task Title - updated, james2",
+    "due_date": "2022-12-18",
+    "description": "description updated - james2",
+    "is_complete": true
+}
+
+### ********************* james2 - Update task_id=1 
+DELETE {{baseUrl}}/tasks/3 HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames2}}
+
+### ********************* james2 - get todo_id=1 
+# @name getTodoById
+@todoId = 1
+GET {{baseUrl}}/todos/{{todoId}} HTTP/1.1
+Authorization: token {{jwtTokenJames2}}
+
+### *************************** login james3
+ # @name loginJames3
+POST {{baseUrl}}/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "james3@gmail.com",
+    "password": "12345678"
+}
+
+### 
+@jwtTokenJames3 = {{loginJames3.response.body.token}}
+
+### ********************* james3 - getAllTodos
+# @name getAllTodos
+GET {{baseUrl}}/todos HTTP/1.1
+Authorization: token {{jwtTokenJames3}}
+
+### ********************* james3 - get todo_id=1 
+# @name getTodoById
+@todoId = 1
+GET {{baseUrl}}/todos/{{todoId}} HTTP/1.1
+Authorization: token {{jwtTokenJames3}}
+
+### ********************* james3 - Update todo_id=1 
+@todoId = 1
+PUT {{baseUrl}}/todos/{{todoId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames3}}
+
+{
+      "title": "todo_1 updated by james3",
+      "due_date": "2021-12-12",
+      "is_completed": true
+}
+
+### ********************* james3 - Update task_id=1 
+@taskId = 1
+PUT {{baseUrl}}/tasks/{{taskId}} HTTP/1.1
+Content-Type: application/json
+Authorization: token {{jwtTokenJames3}}
+
+{
+    "title": "Task Title - updated, james3",
+    "due_date": "2022-12-20",
+    "description": "description updated - james3",
+    "is_complete": true
+}
