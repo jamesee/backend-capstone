@@ -2,12 +2,12 @@
 
 Submitted by : James Ee
 
-# Project Description
+# 1. Project Description
 
 This is the end-of-module final project for our learning of backend Dev at SUTD. Please see project [requirements](images/project-requirements.pdf).
 
 
-# Entity Relationship and Schema
+# 2. Entity Relationship and Schema
 
 The entity relationship chart is shown below: <br><br>
 ![entity-relationship](images/entity-relationship.png)
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS Access_controls (
 )
 
 ```
-# Project Structure
+# 3. Project Structure
 
 ```bash
 .
@@ -126,21 +126,21 @@ CREATE TABLE IF NOT EXISTS Access_controls (
     ├── todos.int.test.js
     └── utils.js
 ```
-# Project Setup
+# 4. Project Setup
 
-## Installation
+## 4.1 Installation
 
 ```bash
 $ npm install
 ```
-## Usage
+## 4.2 Usage
 
-### DB migration
+### 4.2.1 DB migration
 
 ```bash
 $ npm run db:migrate
 ```
-### Start server
+### 4.2.2 Start server
 ```bash
 # for development
 $ npm run dev
@@ -149,7 +149,7 @@ $ npm run dev
 $ npm run start
 ```
 
-## Local Deployment
+## 4.3 Local Deployment
 
 ```bash
 # start postgres docker container
@@ -159,9 +159,9 @@ $ source backup/postgres-docker.sh
 $ source  backup/rabbitMQ-docker.sh
 ```
 
-## Heroku Deployment
+## 4.4 Heroku Deployment
 
-### App Setup
+### 4.4.1 App Setup
 
 ```bash
 $ heroku login
@@ -201,7 +201,7 @@ To access the cloudamqp manager,
 $ heroku addons:open cloudamqp -a backenddev-capstone
 ```
 
-### Nodejs accessing Heroku postgres add-on with TLS
+### 4.4.2 Nodejs accessing Heroku postgres add-on with TLS
 
 To access the heroku postgres add-on with TLS using Nodejs, the following settings are required.
 ```js
@@ -220,7 +220,7 @@ let pool = new Pool({
 
 The AWS global-bundle.pem can be downloaded from this [link](https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem)
 
-### CI/CD Using Github Actions
+### 4.4.3 CI/CD Using Github Actions
 
 ```yaml
 # .github/workflows/node.js.yml
@@ -289,7 +289,7 @@ jobs:
           heroku_email: "james.ee.developer@gmail.com"
 ```
 
-# Demo
+# 5. Demo
 
 The url of the app is at :
 https://backenddev-capstone.herokuapp.com/
@@ -306,7 +306,7 @@ $ heroku open
 Swagger documentation can be found at 
 https://backenddev-capstone.herokuapp.com/api-docs
 
-## Steps to demostrate the functionalities of the APIs 
+## 5.1 Steps to demostrate the functionalities of the APIs 
 
 The demo will be using the REST-Client plugin for VS Code.
 
