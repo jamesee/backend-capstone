@@ -1,0 +1,72 @@
+.
+├── Procfile
+├── README.md
+├── demos
+│   └── demo-share-todolist.http
+├── directory-tree.txt
+├── package-lock.json
+├── package.json
+├── public
+│   ├── index.html
+│   └── minion.png
+├── scripts
+│   └── migrate.js
+├── sql
+│   ├── activity5.json
+│   ├── backup-after-step10.pgsql
+│   ├── psql
+│   ├── psql-dump.sh
+│   └── resetdb.sql
+├── src
+│   ├── app.js
+│   ├── controllers
+│   │   ├── auth.js
+│   │   ├── index.js
+│   │   ├── tasks.js
+│   │   └── todos.js
+│   ├── db
+│   │   ├── access-controls.js
+│   │   ├── global-bundle.pem
+│   │   ├── index.js
+│   │   ├── tasks.js
+│   │   ├── todos.js
+│   │   └── users.js
+│   ├── dto
+│   │   ├── auth-schema.js
+│   │   ├── index.js
+│   │   ├── task-schema.js
+│   │   └── todo-schema.js
+│   ├── errors
+│   │   ├── api-error-handler.js
+│   │   └── api-error.js
+│   ├── middlewares
+│   │   ├── auth.js
+│   │   ├── auth.test.js
+│   │   ├── validate-dto.js
+│   │   └── validate-dto.test.js.bak
+│   ├── models
+│   │   ├── access-control.js
+│   │   ├── task.js
+│   │   ├── todo.js
+│   │   └── user.js
+│   ├── routes
+│   │   ├── auth.js
+│   │   ├── index.js
+│   │   ├── tasks.js
+│   │   └── todos.js
+│   ├── server.js
+│   ├── services
+│   │   ├── access-controls.js
+│   │   ├── amqp.js
+│   │   ├── auth.js
+│   │   └── auth.test.js.bak
+│   ├── validations
+│   │   └── index.js
+│   └── worker.js
+└── tests
+    ├── auth.int.test.js
+    ├── tasks.int.test.js
+    ├── todos.int.test.js
+    └── utils.js
+
+15 directories, 54 files
